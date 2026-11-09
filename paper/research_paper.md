@@ -249,7 +249,7 @@ We evaluated SecureVault to answer three central research questions:
 Our evaluation incorporates four API systems:
 1. **SecureVault API (v1.0.0):** Our dual-mode FastAPI testbed (16 endpoints), featuring SQLite storage, JWT authentication, and intentional vulnerabilities mapped to all six target CWEs.
 2. **Appwrite (v0.9.3):** Real-world backend-as-a-service examined in the VOAPI² paper, containing 95 operations.
-3. **Request Baskets (v1.2.3):** Real-world HTTP request collector evaluated in VOAPI², containing 20 operations.
+3. **Request Baskets (v1.2.3):** Real-world HTTP request collector evaluated in VOAPI², containing 20 operations (defined across 10 path keys in `rbaskets-openapi.yaml`; an informal count of 22 in earlier discussions included two unversioned web frontend handler routes outside the formal REST contract).
 4. **Gitea (v1.16.7):** Enterprise self-hosted Git platform analyzed in VOAPI², containing 291 operations.
 
 ### 6.2 Empirical Comparative Results (RQ1 & RQ2)
@@ -341,3 +341,4 @@ Our experimental benchmarking confirmed that vulnerability-oriented testing outp
 6. **National Institute of Standards and Technology (NIST).** *Common Weakness Enumeration (CWE) Specification.* MITRE Corporation, 2024.
 7. **National Vulnerability Database (NVD).** *Common Vulnerabilities and Exposures (CVE) Catalog.* NIST, 2024.
 8. **OpenAPI Initiative.** *OpenAPI Specification Version 3.1.0.* Linux Foundation, 2021.
+

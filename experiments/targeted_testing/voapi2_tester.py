@@ -66,3 +66,4 @@ class VOAPI2TargetedTester:
             "negative_verdicts": negative_count,
             "results": test_results
         }
+

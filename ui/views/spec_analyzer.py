@@ -1,16 +1,17 @@
 """
-API Specification Analyzer View
+API Specification Analyzer View (UI 2.0 Cinematic Redesign)
 Parses and inspects OpenAPI 2.0/3.0/3.1 and Swagger specifications,
-resolving schemas, extracting endpoints, parameters, and request bodies (Stage 1).
+resolving schemas, extracting endpoints, and rendering the interactive API Network Explorer (Phase 4A).
 """
-import json
 import time
 import streamlit as st
 import pandas as pd
 import plotly.express as px
 from config.settings import BASE_DIR
 from framework.stage1_spec_analysis.parser import OpenAPISpecParser
-from ui.components.styling import render_header, render_metric_card
+from framework.stage2_candidate_extraction.extractor import CandidateInterfaceExtractor
+from ui.components.styling import render_hero, render_kpi_card
+from ui.components.network_graph import build_api_network_figure
 
 PRELOADED_SPECS = {
     "SecureVault Dual-Mode API (v1.0.0)": BASE_DIR / "datasets" / "api_specifications" / "raw" / "securevault_openapi.json",
@@ -20,25 +21,29 @@ PRELOADED_SPECS = {
 }
 
 def render_spec_analyzer_view():
-    render_header(
-        title="API Specification Analyzer (Stage 1)",
-        subtitle="Automated Parsing & Schema Normalization for OpenAPI 2.0/3.0/3.1 and Swagger Specs",
-        badge="Stage 1 Engine"
+    render_hero(
+        title="API Specification Analyzer",
+        subtitle="Automated Parsing, Recursive Schema Normalization & Interactive API Network Topology (Stage 1)",
+        badge="Stage 1 Engine",
+        meta_items=[
+            "📄 OpenAPI 2.0 / 3.0 / 3.1 & Swagger",
+            "🔄 In-Memory $ref Graph",
+            "🕸️ Interactive Network Topology",
+            "⚡ Sub-Millisecond Normalization"
+        ]
     )
 
     col_select, col_upload = st.columns([2, 1])
     with col_select:
-        spec_choice = st.selectbox("Select Target API Specification:", list(PRELOADED_SPECS.keys()) + ["Upload Custom Spec..."])
+        spec_choice = st.selectbox("Select Target Specification for Analysis:", list(PRELOADED_SPECS.keys()) + ["Upload Custom Spec..."])
 
     custom_file = None
     if spec_choice == "Upload Custom Spec...":
         with col_upload:
             custom_file = st.file_uploader("Upload OpenAPI Spec (JSON or YAML):", type=["json", "yaml", "yml"])
 
-    # Determine spec path or content
     spec_path = None
     if custom_file is not None:
-        # Save temp file
         temp_path = BASE_DIR / "results" / "temp_uploaded_spec.json"
         with open(temp_path, "wb") as f:
             f.write(custom_file.getbuffer())
@@ -56,45 +61,57 @@ def render_spec_analyzer_view():
     endpoints = parser.parse()
     parse_time = (time.perf_counter() - t0) * 1000
 
-    # Metrics
+    # Also extract candidates for network visualization
+    extractor = CandidateInterfaceExtractor()
+    candidates = extractor.extract(endpoints)
+
+    # KPI Cards (Light Surface)
     c1, c2, c3, c4 = st.columns(4)
     with c1:
-        st.markdown(render_metric_card("Spec Title", parser.info.get("title", "REST API")[:16], f"v{parser.info.get('version', '1.0')}", "#48CAE4"), unsafe_allow_html=True)
+        st.markdown(render_kpi_card("Specification Title", parser.info.get("title", "REST API")[:16], f"v{parser.info.get('version', '1.0')}", "#0284C7"), unsafe_allow_html=True)
     with c2:
-        st.markdown(render_metric_card("Total Endpoints", str(len(endpoints)), f"{len(parser.paths)} Paths", "#00B4D8"), unsafe_allow_html=True)
+        st.markdown(render_kpi_card("Total Operations", str(len(endpoints)), f"{len(parser.paths)} Paths Defined", "#0EA5E9"), unsafe_allow_html=True)
     with c3:
-        st.markdown(render_metric_card("Parse Latency", f"{parse_time:.2f} ms", "Fast In-Memory Graph", "#10B981"), unsafe_allow_html=True)
+        st.markdown(render_kpi_card("Parse Latency", f"{parse_time:.2f} ms", "Fast In-Memory Graph", "#10B981"), unsafe_allow_html=True)
     with c4:
-        st.markdown(render_metric_card("Spec Format", parser.spec_type, "JSON / YAML", "#F59E0B"), unsafe_allow_html=True)
+        st.markdown(render_kpi_card("Spec Dialect", parser.spec_type, "JSON / YAML Format", "#F59E0B"), unsafe_allow_html=True)
+
+    st.markdown("<div style='height: 18px;'></div>", unsafe_allow_html=True)
+
+    # Phase 4A: Animated Interactive API Network Explorer
+    st.subheader("Interactive API Network & Dependency Topology")
+    st.markdown("Explore endpoint nodes, HTTP methods, candidate vulnerability flags, and producer-consumer dependency links:")
+    fig_net = build_api_network_figure(endpoints, candidates)
+    st.plotly_chart(fig_net, use_container_width=True)
 
     st.markdown("<div style='height: 16px;'></div>", unsafe_allow_html=True)
 
-    # HTTP Methods Chart
+    # HTTP Methods Chart & Metadata
     col_chart, col_meta = st.columns([1.5, 1])
     with col_chart:
         method_counts = {}
         for ep in endpoints:
             method_counts[ep.method] = method_counts.get(ep.method, 0) + 1
         df_methods = pd.DataFrame(list(method_counts.items()), columns=["HTTP Method", "Count"])
-        fig = px.pie(
+        fig_pie = px.pie(
             df_methods,
             values="Count",
             names="HTTP Method",
-            title="HTTP Method Distribution",
-            color_discrete_sequence=["#48CAE4", "#00B4D8", "#0077B6", "#10B981", "#EF4444"]
+            title=f"HTTP Method Distribution ({len(endpoints)} Operations)",
+            color_discrete_sequence=["#0284C7", "#10B981", "#F59E0B", "#EF4444", "#8B5CF6"]
         )
-        fig.update_layout(paper_bgcolor="#162035", plot_bgcolor="#162035", font_color="#F8FAFC", height=280, margin=dict(l=10, r=10, t=30, b=10))
-        st.plotly_chart(fig, use_container_width=True)
+        fig_pie.update_layout(paper_bgcolor="#FFFFFF", plot_bgcolor="#F8FAFC", font_color="#0F172A", height=280, margin=dict(l=10, r=10, t=30, b=10))
+        st.plotly_chart(fig_pie, use_container_width=True)
 
     with col_meta:
-        st.markdown("**Specification Details:**")
-        st.markdown(f"- **OpenAPI/Swagger Version:** `{parser.spec_type}`")
+        st.markdown("#### Specification Metadata")
+        st.markdown(f"- **Format Dialect:** `{parser.spec_type}`")
         st.markdown(f"- **Description:** {parser.info.get('description', 'No description provided')[:120]}...")
-        st.markdown(f"- **Server URL:** `{parser.servers[0] if parser.servers else 'http://localhost:8000'}`")
-        st.markdown(f"- **Total Path Items:** `{len(parser.paths)}`")
-        st.markdown(f"- **Total Operations (Endpoints):** `{len(endpoints)}`")
+        st.markdown(f"- **Target Server:** `{parser.servers[0] if parser.servers else 'http://localhost:8000'}`")
+        st.markdown(f"- **Unique Path Patterns:** `{len(parser.paths)}`")
+        st.markdown(f"- **Candidate Target Interfaces:** `{len(candidates)} ({round(len(candidates)/len(endpoints)*100, 1)}%)`")
 
-    # Endpoints Table
+    # Endpoints Catalog Table
     st.subheader(f"Parsed Endpoint Catalog ({len(endpoints)} Operations)")
     search_ep = st.text_input("Filter endpoints by path or parameter name:", "")
     

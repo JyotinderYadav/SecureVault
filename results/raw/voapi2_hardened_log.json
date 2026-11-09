@@ -2,7 +2,7 @@
   "strategy": "VOAPI2_TARGETED_TESTING",
   "total_candidates": 13,
   "total_requests": 15,
-  "total_time_ms": 95.81,
+  "total_time_ms": 88.39,
   "confirmed_vulnerabilities": 0,
   "potential_vulnerabilities": 1,
   "negative_verdicts": 10,
@@ -17,7 +17,7 @@
       "target_parameter": "file",
       "payload_used": "webshell.php",
       "status_code": 400,
-      "latency_ms": 4.5,
+      "latency_ms": 4.08,
       "verdict": "NEGATIVE",
       "confidence": 0.95,
       "explanation": "Defended: Upload rejected by extension or MIME type whitelist.",
@@ -28,7 +28,7 @@
           "method": "POST",
           "path": "/api/v1/vault/upload",
           "status": 400,
-          "latency_ms": 4.5,
+          "latency_ms": 4.08,
           "payload_injected": "webshell.php",
           "target_parameter": "file"
         }
@@ -44,7 +44,7 @@
       "target_parameter": "filename",
       "payload_used": "webshell.php",
       "status_code": 200,
-      "latency_ms": 4.47,
+      "latency_ms": 5.51,
       "verdict": "POTENTIAL_VULNERABILITY",
       "confidence": 0.75,
       "explanation": "Script upload returned HTTP 200 without explicit rejection.",
@@ -55,7 +55,7 @@
           "method": "GET",
           "path": "/api/v1/vault/files/read",
           "status": 200,
-          "latency_ms": 4.47,
+          "latency_ms": 5.51,
           "payload_injected": "webshell.php",
           "target_parameter": "filename"
         }
@@ -71,7 +71,7 @@
       "target_parameter": "filename",
       "payload_used": "../vault_secret.txt",
       "status_code": 403,
-      "latency_ms": 3.47,
+      "latency_ms": 4.86,
       "verdict": "NEGATIVE",
       "confidence": 0.95,
       "explanation": "Defended: Traversal sequence blocked by canonical path verification.",
@@ -82,7 +82,7 @@
           "method": "GET",
           "path": "/api/v1/vault/files/read",
           "status": 403,
-          "latency_ms": 3.47,
+          "latency_ms": 4.86,
           "payload_injected": "../vault_secret.txt",
           "target_parameter": "filename"
         }
@@ -98,7 +98,7 @@
       "target_parameter": "cmd",
       "payload_used": "127.0.0.1 & echo VoAPICmdTest",
       "status_code": 400,
-      "latency_ms": 4.48,
+      "latency_ms": 3.39,
       "verdict": "NEGATIVE",
       "confidence": 0.85,
       "explanation": "Command injection not triggered.",
@@ -109,7 +109,7 @@
           "method": "POST",
           "path": "/api/v1/vault/tools/ping-backup",
           "status": 400,
-          "latency_ms": 4.48,
+          "latency_ms": 3.39,
           "payload_injected": "127.0.0.1 & echo VoAPICmdTest",
           "target_parameter": "cmd"
         }
@@ -125,7 +125,7 @@
       "target_parameter": "query",
       "payload_used": "1' OR '1'='1' -- ",
       "status_code": 200,
-      "latency_ms": 4.71,
+      "latency_ms": 4.69,
       "verdict": "NEGATIVE",
       "confidence": 0.95,
       "explanation": "Defended: Parameterized query treated input as literal string.",
@@ -136,7 +136,7 @@
           "method": "GET",
           "path": "/api/v1/vault/records/search",
           "status": 200,
-          "latency_ms": 4.71,
+          "latency_ms": 4.69,
           "payload_injected": "1' OR '1'='1' -- ",
           "target_parameter": "query"
         }
@@ -152,7 +152,7 @@
       "target_parameter": "mode",
       "payload_used": "127.0.0.1 & echo VoAPICmdTest",
       "status_code": 400,
-      "latency_ms": 3.31,
+      "latency_ms": 4.64,
       "verdict": "NEGATIVE",
       "confidence": 0.95,
       "explanation": "Defended: Shell metacharacters rejected by input validation.",
@@ -163,7 +163,7 @@
           "method": "POST",
           "path": "/api/v1/system/mode",
           "status": 400,
-          "latency_ms": 3.31,
+          "latency_ms": 4.64,
           "payload_injected": "127.0.0.1 & echo VoAPICmdTest",
           "target_parameter": "mode"
         }
@@ -179,7 +179,7 @@
       "target_parameter": "url",
       "payload_used": "http://127.0.0.1:8000/api/v1/internal/health",
       "status_code": 403,
-      "latency_ms": 3.48,
+      "latency_ms": 7.17,
       "verdict": "NEGATIVE",
       "confidence": 0.95,
       "explanation": "Defended: Destination address strictly blocked by network validation policy.",
@@ -190,7 +190,7 @@
           "method": "POST",
           "path": "/api/v1/vault/sync",
           "status": 403,
-          "latency_ms": 3.48,
+          "latency_ms": 7.17,
           "payload_injected": "http://127.0.0.1:8000/api/v1/internal/health",
           "target_parameter": "url"
         }
@@ -206,7 +206,7 @@
       "target_parameter": "file",
       "payload_used": "../vault_secret.txt",
       "status_code": 422,
-      "latency_ms": 3.66,
+      "latency_ms": 3.01,
       "verdict": "INCONCLUSIVE",
       "confidence": 0.4,
       "explanation": "Response HTTP 422 with no signature match.",
@@ -217,7 +217,7 @@
           "method": "POST",
           "path": "/api/v1/vault/upload",
           "status": 422,
-          "latency_ms": 3.66,
+          "latency_ms": 3.01,
           "payload_injected": "../vault_secret.txt",
           "target_parameter": "file"
         }
@@ -233,7 +233,7 @@
       "target_parameter": "host",
       "payload_used": "http://127.0.0.1:8000/api/v1/internal/health",
       "status_code": 400,
-      "latency_ms": 4.25,
+      "latency_ms": 4.03,
       "verdict": "INCONCLUSIVE",
       "confidence": 0.4,
       "explanation": "Ambiguous HTTP 400 response.",
@@ -244,7 +244,7 @@
           "method": "POST",
           "path": "/api/v1/vault/tools/ping-backup",
           "status": 400,
-          "latency_ms": 4.25,
+          "latency_ms": 4.03,
           "payload_injected": "http://127.0.0.1:8000/api/v1/internal/health",
           "target_parameter": "host"
         }
@@ -260,18 +260,18 @@
       "target_parameter": "title",
       "payload_used": "<script>alert('VoAPITestXSS')</script>",
       "status_code": 200,
-      "latency_ms": 9.18,
+      "latency_ms": 10.04,
       "verdict": "NEGATIVE",
       "confidence": 0.95,
       "explanation": "Defended: HTML entities properly escaped and sanitized.",
-      "response_preview": "{\"id\":31,\"title\":\"&lt;script&gt;alert(&#x27;VoAPITestXSS&#x27;)&lt;/script&gt;\",\"comment\":\"VoAPI_NbaeCY\",\"content\":\"VoAPI_uTaKil\",\"user_agent\":\"testclient\",\"timestamp\":null}",
+      "response_preview": "{\"id\":59,\"title\":\"&lt;script&gt;alert(&#x27;VoAPITestXSS&#x27;)&lt;/script&gt;\",\"comment\":\"VoAPI_tIgDoe\",\"content\":\"VoAPI_sneDbi\",\"user_agent\":\"testclient\",\"timestamp\":null}",
       "execution_trace": [
         {
           "role": "CANDIDATE_TARGET",
           "method": "POST",
           "path": "/api/v1/vault/audit/logs",
           "status": 200,
-          "latency_ms": 9.18,
+          "latency_ms": 10.04,
           "payload_injected": "<script>alert('VoAPITestXSS')</script>",
           "target_parameter": "title"
         },
@@ -280,7 +280,7 @@
           "method": "GET",
           "path": "/api/v1/vault/audit/logs",
           "status": 200,
-          "latency_ms": 7.49
+          "latency_ms": 7.18
         }
       ]
     },
@@ -294,18 +294,18 @@
       "target_parameter": "name",
       "payload_used": "<script>alert('VoAPITestXSS')</script>",
       "status_code": 201,
-      "latency_ms": 9.01,
+      "latency_ms": 10.15,
       "verdict": "NEGATIVE",
       "confidence": 0.95,
       "explanation": "Defended: HTML entities properly escaped and sanitized.",
-      "response_preview": "{\"id\":\"902d3825\",\"name\":\"<script>alert('VoAPITestXSS')</script>\",\"description\":\"VoAPI_RgAlIx\",\"owner\":\"admin\"}",
+      "response_preview": "{\"id\":\"76b244fc\",\"name\":\"<script>alert('VoAPITestXSS')</script>\",\"description\":\"VoAPI_ZobfKb\",\"owner\":\"admin\"}",
       "execution_trace": [
         {
           "role": "CANDIDATE_TARGET",
           "method": "POST",
           "path": "/api/v1/vault/items",
           "status": 201,
-          "latency_ms": 9.01,
+          "latency_ms": 10.15,
           "payload_injected": "<script>alert('VoAPITestXSS')</script>",
           "target_parameter": "name"
         },
@@ -314,7 +314,7 @@
           "method": "GET",
           "path": "/api/v1/vault/audit/logs",
           "status": 200,
-          "latency_ms": 20.61
+          "latency_ms": 7.41
         }
       ]
     },
@@ -355,7 +355,7 @@
       "target_parameter": "id",
       "payload_used": "1' OR '1'='1' -- ",
       "status_code": 404,
-      "latency_ms": 3.82,
+      "latency_ms": 3.93,
       "verdict": "NEGATIVE",
       "confidence": 0.85,
       "explanation": "No SQL injection symptoms detected.",
@@ -366,7 +366,7 @@
           "method": "DELETE",
           "path": "/api/v1/vault/items/1' OR '1'='1' -- ",
           "status": 404,
-          "latency_ms": 3.82,
+          "latency_ms": 3.93,
           "payload_injected": "1' OR '1'='1' -- ",
           "target_parameter": "id"
         }

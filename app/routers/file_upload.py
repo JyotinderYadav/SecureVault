@@ -63,3 +63,4 @@ async def upload_vault_file(file: UploadFile = File(..., description="File to st
         is_executable=is_exec,
         warning=warning
     )
+

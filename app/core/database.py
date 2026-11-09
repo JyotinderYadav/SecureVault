@@ -130,3 +130,4 @@ def search_vault_records_hardened(query: str, category: Optional[str] = None) ->
     rows = cursor.fetchall()
     conn.close()
     return [dict(row) for row in rows]
+

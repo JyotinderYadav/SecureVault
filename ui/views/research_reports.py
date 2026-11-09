@@ -1,5 +1,5 @@
 """
-Research Reports View
+Research Reports View (UI 2.0 Cinematic Redesign)
 Generates exportable Executive Security Summaries and Technical Vulnerability Audit Reports
 in Markdown and JSON formats for academic submission and stakeholder presentation.
 """
@@ -8,7 +8,7 @@ import time
 import streamlit as st
 import pandas as pd
 from config.settings import BASE_DIR, system_config
-from ui.components.styling import render_header
+from ui.components.styling import render_hero
 
 def generate_markdown_report():
     vuln_log_path = BASE_DIR / "results" / "raw" / "voapi2_vulnerable_log.json"
@@ -74,10 +74,16 @@ All confirmed vulnerabilities were mitigated in the SecureVault Hardened configu
     return report
 
 def render_research_reports_view():
-    render_header(
+    render_hero(
         title="Research Reports & Artifacts",
         subtitle="Generate, Preview and Export Comprehensive Security Audit Summaries & Evaluation Artifacts",
-        badge="Reporting Engine"
+        badge="Reporting Engine",
+        meta_items=[
+            "📄 Markdown Executive Summary",
+            "📊 Raw JSON Audit Telemetry",
+            "🛡️ Dual-Mode Verification Details",
+            "📥 One-Click Export"
+        ]
     )
 
     report_md = generate_markdown_report()
@@ -85,7 +91,14 @@ def render_research_reports_view():
     tab_preview, tab_download = st.tabs(["1. Report In-Browser Preview", "2. Export & Download"])
 
     with tab_preview:
+        st.markdown(
+            """
+            <div class="light-card" style="padding: 28px;">
+            """,
+            unsafe_allow_html=True
+        )
         st.markdown(report_md)
+        st.markdown("</div>", unsafe_allow_html=True)
 
     with tab_download:
         st.subheader("Available Report Downloads")

@@ -80,3 +80,4 @@ def delete_vault_item(id: str):
         )
 
     return {"status": "DELETED", "id": id}
+

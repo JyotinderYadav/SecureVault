@@ -124,3 +124,4 @@ def view_audit_logs_html():
     </html>
     """
     return HTMLResponse(content=html_page)
+

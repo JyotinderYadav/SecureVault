@@ -2,3 +2,4 @@
 from .parser import OpenAPISpecParser
 
 __all__ = ["OpenAPISpecParser"]
+

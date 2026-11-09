@@ -29,3 +29,4 @@ def login(credentials: LoginRequest):
 
     token = create_access_token({"sub": user["username"], "role": user["role"]})
     return TokenResponse(access_token=token, token_type="bearer", role=user["role"])
+

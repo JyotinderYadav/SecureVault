@@ -2,7 +2,7 @@
   "strategy": "VOAPI2_TARGETED_TESTING",
   "total_candidates": 13,
   "total_requests": 15,
-  "total_time_ms": 162.81,
+  "total_time_ms": 151.91,
   "confirmed_vulnerabilities": 7,
   "potential_vulnerabilities": 2,
   "negative_verdicts": 3,
@@ -17,7 +17,7 @@
       "target_parameter": "file",
       "payload_used": "webshell.php",
       "status_code": 200,
-      "latency_ms": 4.81,
+      "latency_ms": 4.32,
       "verdict": "CONFIRMED_VULNERABILITY",
       "confidence": 1.0,
       "explanation": "Unrestricted Upload confirmed: dangerous executable extension accepted and stored.",
@@ -28,7 +28,7 @@
           "method": "POST",
           "path": "/api/v1/vault/upload",
           "status": 200,
-          "latency_ms": 4.81,
+          "latency_ms": 4.32,
           "payload_injected": "webshell.php",
           "target_parameter": "file"
         }
@@ -44,7 +44,7 @@
       "target_parameter": "filename",
       "payload_used": "webshell.php",
       "status_code": 200,
-      "latency_ms": 8.83,
+      "latency_ms": 6.56,
       "verdict": "POTENTIAL_VULNERABILITY",
       "confidence": 0.75,
       "explanation": "Script upload returned HTTP 200 without explicit rejection.",
@@ -55,7 +55,7 @@
           "method": "GET",
           "path": "/api/v1/vault/files/read",
           "status": 200,
-          "latency_ms": 8.83,
+          "latency_ms": 6.56,
           "payload_injected": "webshell.php",
           "target_parameter": "filename"
         }
@@ -71,18 +71,18 @@
       "target_parameter": "filename",
       "payload_used": "../vault_secret.txt",
       "status_code": 200,
-      "latency_ms": 8.22,
+      "latency_ms": 4.11,
       "verdict": "CONFIRMED_VULNERABILITY",
       "confidence": 1.0,
       "explanation": "Path Traversal confirmed: unauthorized file contents leaked from outside root.",
-      "response_preview": "{\"status\":\"SUCCESS\",\"requested_path\":\"../vault_secret.txt\",\"resolved_path\":\"vault_secret.txt\",\"content\":\"VAULT_SECRET_KEY=SECUREVAULT_FLAG_{PATH_TRAVERSAL_CWE_22_VERIFIED}\\nCONFIDENTIAL_METRIC_DATA=VaultRoot_Access_Granted_2026\\n\",\"size_bytes\":122}",
+      "response_preview": "{\"status\":\"SUCCESS\",\"requested_path\":\"../vault_secret.txt\",\"resolved_path\":\"vault_secret.txt\",\"content\":\"VAULT_SECRET_KEY=SECUREVAULT_FLAG_{PATH_TRAVERSAL_CWE_22_VERIFIED}\\nCONFIDENTIAL_METRIC_DATA=VaultRoot_Access_Granted_2026\\n\\n\",\"size_bytes\":123}",
       "execution_trace": [
         {
           "role": "CANDIDATE_TARGET",
           "method": "GET",
           "path": "/api/v1/vault/files/read",
           "status": 200,
-          "latency_ms": 8.22,
+          "latency_ms": 4.11,
           "payload_injected": "../vault_secret.txt",
           "target_parameter": "filename"
         }
@@ -98,7 +98,7 @@
       "target_parameter": "cmd",
       "payload_used": "127.0.0.1 & echo VoAPICmdTest",
       "status_code": 200,
-      "latency_ms": 37.72,
+      "latency_ms": 36.34,
       "verdict": "CONFIRMED_VULNERABILITY",
       "confidence": 1.0,
       "explanation": "Command Injection confirmed: injected probe string 'VoAPICmdTest' executed and reflected in output.",
@@ -109,7 +109,7 @@
           "method": "POST",
           "path": "/api/v1/vault/tools/ping-backup",
           "status": 200,
-          "latency_ms": 37.72,
+          "latency_ms": 36.34,
           "payload_injected": "127.0.0.1 & echo VoAPICmdTest",
           "target_parameter": "cmd"
         }
@@ -125,7 +125,7 @@
       "target_parameter": "query",
       "payload_used": "1' OR '1'='1' -- ",
       "status_code": 500,
-      "latency_ms": 4.28,
+      "latency_ms": 4.78,
       "verdict": "POTENTIAL_VULNERABILITY",
       "confidence": 0.85,
       "explanation": "SQL Injection potential: unhandled database error message exposed in response.",
@@ -136,7 +136,7 @@
           "method": "GET",
           "path": "/api/v1/vault/records/search",
           "status": 500,
-          "latency_ms": 4.28,
+          "latency_ms": 4.78,
           "payload_injected": "1' OR '1'='1' -- ",
           "target_parameter": "query"
         }
@@ -152,7 +152,7 @@
       "target_parameter": "mode",
       "payload_used": "127.0.0.1 & echo VoAPICmdTest",
       "status_code": 400,
-      "latency_ms": 4.26,
+      "latency_ms": 3.54,
       "verdict": "NEGATIVE",
       "confidence": 0.95,
       "explanation": "Defended: Shell metacharacters rejected by input validation.",
@@ -163,7 +163,7 @@
           "method": "POST",
           "path": "/api/v1/system/mode",
           "status": 400,
-          "latency_ms": 4.26,
+          "latency_ms": 3.54,
           "payload_injected": "127.0.0.1 & echo VoAPICmdTest",
           "target_parameter": "mode"
         }
@@ -179,7 +179,7 @@
       "target_parameter": "url",
       "payload_used": "http://127.0.0.1:8000/api/v1/internal/health",
       "status_code": 200,
-      "latency_ms": 4.39,
+      "latency_ms": 3.32,
       "verdict": "CONFIRMED_VULNERABILITY",
       "confidence": 1.0,
       "explanation": "SSRF triggered: internal service response and private loopback flag exposed.",
@@ -190,7 +190,7 @@
           "method": "POST",
           "path": "/api/v1/vault/sync",
           "status": 200,
-          "latency_ms": 4.39,
+          "latency_ms": 3.32,
           "payload_injected": "http://127.0.0.1:8000/api/v1/internal/health",
           "target_parameter": "url"
         }
@@ -206,7 +206,7 @@
       "target_parameter": "file",
       "payload_used": "../vault_secret.txt",
       "status_code": 422,
-      "latency_ms": 2.82,
+      "latency_ms": 3.22,
       "verdict": "INCONCLUSIVE",
       "confidence": 0.4,
       "explanation": "Response HTTP 422 with no signature match.",
@@ -217,7 +217,7 @@
           "method": "POST",
           "path": "/api/v1/vault/upload",
           "status": 422,
-          "latency_ms": 2.82,
+          "latency_ms": 3.22,
           "payload_injected": "../vault_secret.txt",
           "target_parameter": "file"
         }
@@ -233,18 +233,18 @@
       "target_parameter": "host",
       "payload_used": "http://127.0.0.1:8000/api/v1/internal/health",
       "status_code": 200,
-      "latency_ms": 42.17,
+      "latency_ms": 36.28,
       "verdict": "CONFIRMED_VULNERABILITY",
       "confidence": 0.95,
       "explanation": "SSRF confirmed: successful HTTP 200 retrieval from loopback/metadata address.",
-      "response_preview": "{\"status\":\"SUCCESS\",\"target_host\":\"http://127.0.0.1:8000/api/v1/internal/health\",\"command_executed\":\"echo [Vault Ping Tool] Node: http://127.0.0.1:8000/api/v1/internal/health & VoAPI_Rfcnon\",\"output\":\"[Vault Ping Tool] Node: http://127.0.0.1:8000/api/v1/internal/health\",\"exit_code\":1}",
+      "response_preview": "{\"status\":\"SUCCESS\",\"target_host\":\"http://127.0.0.1:8000/api/v1/internal/health\",\"command_executed\":\"echo [Vault Ping Tool] Node: http://127.0.0.1:8000/api/v1/internal/health & VoAPI_MYDiwp\",\"output\":\"[Vault Ping Tool] Node: http://127.0.0.1:8000/api/v1/internal/health\",\"exit_code\":1}",
       "execution_trace": [
         {
           "role": "CANDIDATE_TARGET",
           "method": "POST",
           "path": "/api/v1/vault/tools/ping-backup",
           "status": 200,
-          "latency_ms": 42.17,
+          "latency_ms": 36.28,
           "payload_injected": "http://127.0.0.1:8000/api/v1/internal/health",
           "target_parameter": "host"
         }
@@ -260,18 +260,18 @@
       "target_parameter": "title",
       "payload_used": "<script>alert('VoAPITestXSS')</script>",
       "status_code": 200,
-      "latency_ms": 9.1,
+      "latency_ms": 9.38,
       "verdict": "CONFIRMED_VULNERABILITY",
       "confidence": 1.0,
       "explanation": "XSS confirmed: unescaped executable script payload stored and reflected in markup.",
-      "response_preview": "{\"id\":27,\"title\":\"<script>alert('VoAPITestXSS')</script>\",\"comment\":\"VoAPI_wWyVEz\",\"content\":\"VoAPI_FXmffu\",\"user_agent\":\"testclient\",\"timestamp\":null}",
+      "response_preview": "{\"id\":55,\"title\":\"<script>alert('VoAPITestXSS')</script>\",\"comment\":\"VoAPI_bmwKLA\",\"content\":\"VoAPI_kXaUBx\",\"user_agent\":\"testclient\",\"timestamp\":null}",
       "execution_trace": [
         {
           "role": "CANDIDATE_TARGET",
           "method": "POST",
           "path": "/api/v1/vault/audit/logs",
           "status": 200,
-          "latency_ms": 9.1,
+          "latency_ms": 9.38,
           "payload_injected": "<script>alert('VoAPITestXSS')</script>",
           "target_parameter": "title"
         },
@@ -280,7 +280,7 @@
           "method": "GET",
           "path": "/api/v1/vault/audit/logs",
           "status": 200,
-          "latency_ms": 6.62
+          "latency_ms": 6.1
         }
       ]
     },
@@ -294,18 +294,18 @@
       "target_parameter": "name",
       "payload_used": "<script>alert('VoAPITestXSS')</script>",
       "status_code": 201,
-      "latency_ms": 9.06,
+      "latency_ms": 11.88,
       "verdict": "CONFIRMED_VULNERABILITY",
       "confidence": 1.0,
       "explanation": "XSS confirmed: unescaped executable script payload stored and reflected in markup.",
-      "response_preview": "{\"id\":\"f85c953f\",\"name\":\"<script>alert('VoAPITestXSS')</script>\",\"description\":\"VoAPI_NfywDs\",\"owner\":\"admin\"}",
+      "response_preview": "{\"id\":\"4c968a7a\",\"name\":\"<script>alert('VoAPITestXSS')</script>\",\"description\":\"VoAPI_cQZaeF\",\"owner\":\"admin\"}",
       "execution_trace": [
         {
           "role": "CANDIDATE_TARGET",
           "method": "POST",
           "path": "/api/v1/vault/items",
           "status": 201,
-          "latency_ms": 9.06,
+          "latency_ms": 11.88,
           "payload_injected": "<script>alert('VoAPITestXSS')</script>",
           "target_parameter": "name"
         },
@@ -314,7 +314,7 @@
           "method": "GET",
           "path": "/api/v1/vault/audit/logs",
           "status": 200,
-          "latency_ms": 7.34
+          "latency_ms": 8.04
         }
       ]
     },
@@ -328,7 +328,7 @@
       "target_parameter": "id",
       "payload_used": "1' OR '1'='1' -- ",
       "status_code": 404,
-      "latency_ms": 4.18,
+      "latency_ms": 5.45,
       "verdict": "NEGATIVE",
       "confidence": 0.85,
       "explanation": "No SQL injection symptoms detected.",
@@ -339,7 +339,7 @@
           "method": "GET",
           "path": "/api/v1/vault/items/1' OR '1'='1' -- ",
           "status": 404,
-          "latency_ms": 4.18,
+          "latency_ms": 5.45,
           "payload_injected": "1' OR '1'='1' -- ",
           "target_parameter": "id"
         }
@@ -355,7 +355,7 @@
       "target_parameter": "id",
       "payload_used": "1' OR '1'='1' -- ",
       "status_code": 404,
-      "latency_ms": 3.93,
+      "latency_ms": 4.83,
       "verdict": "NEGATIVE",
       "confidence": 0.85,
       "explanation": "No SQL injection symptoms detected.",
@@ -366,7 +366,7 @@
           "method": "DELETE",
           "path": "/api/v1/vault/items/1' OR '1'='1' -- ",
           "status": 404,
-          "latency_ms": 3.93,
+          "latency_ms": 4.83,
           "payload_injected": "1' OR '1'='1' -- ",
           "target_parameter": "id"
         }

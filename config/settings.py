@@ -18,24 +18,57 @@ API_HOST = os.getenv("API_HOST", "127.0.0.1")
 API_PORT = int(os.getenv("API_PORT", 8000))
 API_BASE_URL = f"http://{API_HOST}:{API_PORT}"
 
-# Security Mode State (can be dynamically toggled via /api/v1/system/mode)
+from enum import Enum
+from typing import Union
+
+class SecurityMode(str, Enum):
+    VULNERABLE = "VULNERABLE"
+    HARDENED = "HARDENED"
+
+# Security Mode State (can be dynamically toggled via /api/v1/system/mode or UI)
 class SystemConfig:
     def __init__(self):
-        self.security_mode = os.getenv("SECURITY_MODE", "VULNERABLE").upper()
+        initial_mode = os.getenv("SECURITY_MODE", "VULNERABLE").upper()
+        self._mode: SecurityMode = SecurityMode.HARDENED if initial_mode == "HARDENED" else SecurityMode.VULNERABLE
 
-    def set_mode(self, mode: str):
-        valid = ["VULNERABLE", "HARDENED"]
-        mode_upper = mode.upper()
-        if mode_upper in valid:
-            self.security_mode = mode_upper
+    @property
+    def mode(self) -> SecurityMode:
+        """Returns the SecurityMode enum instance."""
+        return self._mode
+
+    @property
+    def security_mode(self) -> str:
+        """String representation of security mode for backward compatibility."""
+        return self._mode.value
+
+    @security_mode.setter
+    def security_mode(self, val: str):
+        self.set_mode(val)
+
+    def set_mode(self, mode: Union[SecurityMode, str]) -> bool:
+        """Sets the system security mode, accepting either string or SecurityMode."""
+        if isinstance(mode, SecurityMode):
+            self._mode = mode
+            return True
+        mode_upper = str(mode).upper()
+        if mode_upper in ("VULNERABLE", "HARDENED"):
+            self._mode = SecurityMode(mode_upper)
             return True
         return False
 
+    def toggle_mode(self) -> str:
+        """Toggles between VULNERABLE and HARDENED mode and returns the new mode string."""
+        if self._mode == SecurityMode.VULNERABLE:
+            self._mode = SecurityMode.HARDENED
+        else:
+            self._mode = SecurityMode.VULNERABLE
+        return self._mode.value
+
     def is_vulnerable(self) -> bool:
-        return self.security_mode == "VULNERABLE"
+        return self._mode == SecurityMode.VULNERABLE
 
     def is_hardened(self) -> bool:
-        return self.security_mode == "HARDENED"
+        return self._mode == SecurityMode.HARDENED
 
 system_config = SystemConfig()
 JWT_SECRET = "securevault-cs473-secret-key-2026"

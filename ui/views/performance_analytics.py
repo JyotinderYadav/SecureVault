@@ -1,5 +1,5 @@
 """
-Performance Analytics View
+Performance Analytics View (UI 2.0 Cinematic Redesign)
 Interactive data visualization suite presenting detection rates, request efficiency,
 execution latency, candidate rates, and corpus distributions with Plotly and publication figures.
 """
@@ -8,18 +8,24 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 from config.settings import BASE_DIR
-from ui.components.styling import render_header
+from ui.components.styling import render_hero
 
 def render_performance_analytics_view():
-    render_header(
+    render_hero(
         title="Performance Analytics",
-        subtitle="Interactive Visualizations: Detection Rates, Request Efficiency, Latency & Corpus Analytics",
-        badge="Analytics Suite"
+        subtitle="Interactive Visualizations: Detection Rates, Request Efficiency, Latency & Multi-Application Metrics",
+        badge="Analytics Suite",
+        meta_items=[
+            "📈 Interactive Plotly Suite",
+            "🖼️ High-Res 300 DPI Publication Plots",
+            "📊 Overhead & Latency Distributions",
+            "⚡ Multi-Application Candidate Scatter"
+        ]
     )
 
     tab1, tab2, tab3 = st.tabs([
         "1. Interactive Benchmark Analytics",
-        "2. Publication Figures (PNG)",
+        "2. Publication Figures (300 DPI)",
         "3. Multi-Application Comparison"
     ])
 
@@ -32,20 +38,21 @@ def render_performance_analytics_view():
             df_det = pd.DataFrame({
                 "CWE Category": ["SSRF (918)", "Upload (434)", "Traversal (22)", "CmdI (78)", "SQLi (89)", "XSS (79)"],
                 "Baseline Fuzzing": [0, 0, 0, 0, 0, 0],
-                "VOAPI² Testing": [100, 100, 100, 100, 100, 100]
+                "SecureVault (VOAPI²)": [100, 100, 100, 100, 100, 100]
             })
             fig_det = go.Figure(data=[
-                go.Bar(name="Baseline Fuzzing", x=df_det["CWE Category"], y=df_det["Baseline Fuzzing"], marker_color="#EF4444"),
-                go.Bar(name="VOAPI² (SecureVault)", x=df_det["CWE Category"], y=df_det["VOAPI² Testing"], marker_color="#10B981")
+                go.Bar(name="Baseline Generic Fuzzer", x=df_det["CWE Category"], y=df_det["Baseline Fuzzing"], marker_color="#EF4444"),
+                go.Bar(name="SecureVault (VOAPI²)", x=df_det["CWE Category"], y=df_det["SecureVault (VOAPI²)"], marker_color="#0284C7")
             ])
             fig_det.update_layout(
-                title="Vulnerability Detection Rate (%) by CWE Class",
+                title="<b>Vulnerability Detection Rate (%) by Category</b>",
                 barmode="group",
-                paper_bgcolor="#162035",
-                plot_bgcolor="#162035",
-                font_color="#F8FAFC",
+                paper_bgcolor="#FFFFFF",
+                plot_bgcolor="#F8FAFC",
+                font_color="#0F172A",
                 height=320,
-                yaxis=dict(range=[0, 110], title="Detection Rate (%)"),
+                yaxis=dict(range=[0, 115], title="Detection Rate (%)", gridcolor="#E2E8F0"),
+                xaxis=dict(gridcolor="#E2E8F0"),
                 margin=dict(l=10, r=10, t=40, b=10)
             )
             st.plotly_chart(fig_det, use_container_width=True)
@@ -55,26 +62,28 @@ def render_performance_analytics_view():
             df_eff = pd.DataFrame({
                 "Metric": ["Total HTTP Requests", "Execution Time (ms / 10)"],
                 "Baseline Fuzzing": [48, 107.8],
-                "VOAPI² Testing": [15, 16.3]
+                "SecureVault (VOAPI²)": [15, 16.3]
             })
             fig_eff = go.Figure(data=[
-                go.Bar(name="Baseline Fuzzing", x=df_eff["Metric"], y=df_eff["Baseline Fuzzing"], marker_color="#F59E0B"),
-                go.Bar(name="VOAPI² (SecureVault)", x=df_eff["Metric"], y=df_eff["VOAPI² Testing"], marker_color="#48CAE4")
+                go.Bar(name="Baseline Generic Fuzzer", x=df_eff["Metric"], y=df_eff["Baseline Fuzzing"], marker_color="#F59E0B"),
+                go.Bar(name="SecureVault (VOAPI²)", x=df_eff["Metric"], y=df_eff["SecureVault (VOAPI²)"], marker_color="#0EA5E9")
             ])
             fig_eff.update_layout(
-                title="Testing Overhead: Request Count & Execution Latency",
+                title="<b>Testing Overhead: Request Count & Execution Latency</b>",
                 barmode="group",
-                paper_bgcolor="#162035",
-                plot_bgcolor="#162035",
-                font_color="#F8FAFC",
+                paper_bgcolor="#FFFFFF",
+                plot_bgcolor="#F8FAFC",
+                font_color="#0F172A",
                 height=320,
+                yaxis=dict(gridcolor="#E2E8F0"),
+                xaxis=dict(gridcolor="#E2E8F0"),
                 margin=dict(l=10, r=10, t=40, b=10)
             )
             st.plotly_chart(fig_eff, use_container_width=True)
 
     with tab2:
         st.subheader("Publication-Quality Export Figures (Matplotlib 300 DPI)")
-        st.markdown("These high-resolution figures were generated by the experimental runner and are embedded into the academic paper draft:")
+        st.markdown("These high-resolution figures were generated by the experimental runner and are embedded into the academic research paper draft:")
         
         f1_path = BASE_DIR / "results" / "figures" / "detection_comparison_chart.png"
         f2_path = BASE_DIR / "results" / "figures" / "request_efficiency_chart.png"
@@ -101,21 +110,21 @@ def render_performance_analytics_view():
 
         df_apps = pd.DataFrame({
             "Application": apps,
-            "Total Endpoints": total_ops,
+            "Total Operations": total_ops,
             "Candidate Interfaces": candidates,
             "Candidate Ratio (%)": [round(r, 1) for r in ratios]
         })
 
         fig_apps = px.scatter(
             df_apps,
-            x="Total Endpoints",
+            x="Total Operations",
             y="Candidate Interfaces",
             size="Candidate Ratio (%)",
             color="Application",
             text="Application",
             title="Specification Scale vs. Extracted Candidate Interfaces",
-            color_discrete_sequence=["#48CAE4", "#00B4D8", "#0077B6", "#10B981"]
+            color_discrete_sequence=["#0284C7", "#0EA5E9", "#0369A1", "#10B981"]
         )
         fig_apps.update_traces(textposition='top left')
-        fig_apps.update_layout(paper_bgcolor="#162035", plot_bgcolor="#162035", font_color="#F8FAFC", height=380)
+        fig_apps.update_layout(paper_bgcolor="#FFFFFF", plot_bgcolor="#F8FAFC", font_color="#0F172A", height=380)
         st.plotly_chart(fig_apps, use_container_width=True)

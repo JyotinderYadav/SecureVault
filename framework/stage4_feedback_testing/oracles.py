@@ -115,3 +115,4 @@ class VulnerabilityOracle:
             return "NEGATIVE", "Payload safely escaped or not reflected.", 0.85
 
         return "INCONCLUSIVE", "Unknown vulnerability category or inconclusive feedback.", 0.3
+

@@ -140,3 +140,4 @@ class BaselineRandomFuzzer:
             "findings": findings,
             "execution_trace": execution_trace
         }
+

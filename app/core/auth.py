@@ -44,3 +44,4 @@ def get_current_user(credentials: Optional[HTTPAuthorizationCredentials] = Secur
         )
     token = credentials.credentials
     return verify_token(token)
+

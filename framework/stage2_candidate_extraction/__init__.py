@@ -2,3 +2,4 @@
 from .extractor import CandidateInterfaceExtractor
 
 __all__ = ["CandidateInterfaceExtractor"]
+
