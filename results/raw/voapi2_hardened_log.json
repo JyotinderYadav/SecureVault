@@ -1,0 +1,376 @@
+{
+  "strategy": "VOAPI2_TARGETED_TESTING",
+  "total_candidates": 13,
+  "total_requests": 15,
+  "total_time_ms": 95.81,
+  "confirmed_vulnerabilities": 0,
+  "potential_vulnerabilities": 1,
+  "negative_verdicts": 10,
+  "results": [
+    {
+      "candidate": {
+        "path": "/api/v1/vault/upload",
+        "method": "POST",
+        "cwe_id": "CWE-434",
+        "vulnerability_type": "Unrestricted Upload of File"
+      },
+      "target_parameter": "file",
+      "payload_used": "webshell.php",
+      "status_code": 400,
+      "latency_ms": 4.5,
+      "verdict": "NEGATIVE",
+      "confidence": 0.95,
+      "explanation": "Defended: Upload rejected by extension or MIME type whitelist.",
+      "response_preview": "{\"detail\":\"Security Policy Violation: Upload of '.php' files is prohibited. Allowed: ['.csv', '.jpeg', '.jpg', '.json', '.pdf', '.png', '.txt']\"}",
+      "execution_trace": [
+        {
+          "role": "CANDIDATE_TARGET",
+          "method": "POST",
+          "path": "/api/v1/vault/upload",
+          "status": 400,
+          "latency_ms": 4.5,
+          "payload_injected": "webshell.php",
+          "target_parameter": "file"
+        }
+      ]
+    },
+    {
+      "candidate": {
+        "path": "/api/v1/vault/files/read",
+        "method": "GET",
+        "cwe_id": "CWE-434",
+        "vulnerability_type": "Unrestricted Upload of File"
+      },
+      "target_parameter": "filename",
+      "payload_used": "webshell.php",
+      "status_code": 200,
+      "latency_ms": 4.47,
+      "verdict": "POTENTIAL_VULNERABILITY",
+      "confidence": 0.75,
+      "explanation": "Script upload returned HTTP 200 without explicit rejection.",
+      "response_preview": "{\"status\":\"SUCCESS\",\"requested_path\":\"webshell.php\",\"resolved_path\":\"webshell.php\",\"content\":\"<?php echo 'VoAPITestPhp'; ?>\",\"size_bytes\":29}",
+      "execution_trace": [
+        {
+          "role": "CANDIDATE_TARGET",
+          "method": "GET",
+          "path": "/api/v1/vault/files/read",
+          "status": 200,
+          "latency_ms": 4.47,
+          "payload_injected": "webshell.php",
+          "target_parameter": "filename"
+        }
+      ]
+    },
+    {
+      "candidate": {
+        "path": "/api/v1/vault/files/read",
+        "method": "GET",
+        "cwe_id": "CWE-22",
+        "vulnerability_type": "Path Traversal"
+      },
+      "target_parameter": "filename",
+      "payload_used": "../vault_secret.txt",
+      "status_code": 403,
+      "latency_ms": 3.47,
+      "verdict": "NEGATIVE",
+      "confidence": 0.95,
+      "explanation": "Defended: Traversal sequence blocked by canonical path verification.",
+      "response_preview": "{\"detail\":\"Security Policy Violation: Path Traversal attempt blocked (CWE-22 mitigation).\"}",
+      "execution_trace": [
+        {
+          "role": "CANDIDATE_TARGET",
+          "method": "GET",
+          "path": "/api/v1/vault/files/read",
+          "status": 403,
+          "latency_ms": 3.47,
+          "payload_injected": "../vault_secret.txt",
+          "target_parameter": "filename"
+        }
+      ]
+    },
+    {
+      "candidate": {
+        "path": "/api/v1/vault/tools/ping-backup",
+        "method": "POST",
+        "cwe_id": "CWE-78",
+        "vulnerability_type": "OS Command Injection"
+      },
+      "target_parameter": "cmd",
+      "payload_used": "127.0.0.1 & echo VoAPICmdTest",
+      "status_code": 400,
+      "latency_ms": 4.48,
+      "verdict": "NEGATIVE",
+      "confidence": 0.85,
+      "explanation": "Command injection not triggered.",
+      "response_preview": "{\"detail\":\"Security Policy Violation: Custom command execution is prohibited (CWE-78 mitigation).\"}",
+      "execution_trace": [
+        {
+          "role": "CANDIDATE_TARGET",
+          "method": "POST",
+          "path": "/api/v1/vault/tools/ping-backup",
+          "status": 400,
+          "latency_ms": 4.48,
+          "payload_injected": "127.0.0.1 & echo VoAPICmdTest",
+          "target_parameter": "cmd"
+        }
+      ]
+    },
+    {
+      "candidate": {
+        "path": "/api/v1/vault/records/search",
+        "method": "GET",
+        "cwe_id": "CWE-89",
+        "vulnerability_type": "SQL Injection"
+      },
+      "target_parameter": "query",
+      "payload_used": "1' OR '1'='1' -- ",
+      "status_code": 200,
+      "latency_ms": 4.71,
+      "verdict": "NEGATIVE",
+      "confidence": 0.95,
+      "explanation": "Defended: Parameterized query treated input as literal string.",
+      "response_preview": "{\"status\":\"SUCCESS\",\"query_executed\":\"Parameterized Prepared Statement (?)\",\"count\":0,\"records\":[]}",
+      "execution_trace": [
+        {
+          "role": "CANDIDATE_TARGET",
+          "method": "GET",
+          "path": "/api/v1/vault/records/search",
+          "status": 200,
+          "latency_ms": 4.71,
+          "payload_injected": "1' OR '1'='1' -- ",
+          "target_parameter": "query"
+        }
+      ]
+    },
+    {
+      "candidate": {
+        "path": "/api/v1/system/mode",
+        "method": "POST",
+        "cwe_id": "CWE-78",
+        "vulnerability_type": "OS Command Injection"
+      },
+      "target_parameter": "mode",
+      "payload_used": "127.0.0.1 & echo VoAPICmdTest",
+      "status_code": 400,
+      "latency_ms": 3.31,
+      "verdict": "NEGATIVE",
+      "confidence": 0.95,
+      "explanation": "Defended: Shell metacharacters rejected by input validation.",
+      "response_preview": "{\"detail\":\"Invalid mode. Must be either 'VULNERABLE' or 'HARDENED'.\"}",
+      "execution_trace": [
+        {
+          "role": "CANDIDATE_TARGET",
+          "method": "POST",
+          "path": "/api/v1/system/mode",
+          "status": 400,
+          "latency_ms": 3.31,
+          "payload_injected": "127.0.0.1 & echo VoAPICmdTest",
+          "target_parameter": "mode"
+        }
+      ]
+    },
+    {
+      "candidate": {
+        "path": "/api/v1/vault/sync",
+        "method": "POST",
+        "cwe_id": "CWE-918",
+        "vulnerability_type": "Server-Side Request Forgery"
+      },
+      "target_parameter": "url",
+      "payload_used": "http://127.0.0.1:8000/api/v1/internal/health",
+      "status_code": 403,
+      "latency_ms": 3.48,
+      "verdict": "NEGATIVE",
+      "confidence": 0.95,
+      "explanation": "Defended: Destination address strictly blocked by network validation policy.",
+      "response_preview": "{\"detail\":\"Security Policy Violation: Access to private or loopback IP (127.0.0.1) is blocked.\"}",
+      "execution_trace": [
+        {
+          "role": "CANDIDATE_TARGET",
+          "method": "POST",
+          "path": "/api/v1/vault/sync",
+          "status": 403,
+          "latency_ms": 3.48,
+          "payload_injected": "http://127.0.0.1:8000/api/v1/internal/health",
+          "target_parameter": "url"
+        }
+      ]
+    },
+    {
+      "candidate": {
+        "path": "/api/v1/vault/upload",
+        "method": "POST",
+        "cwe_id": "CWE-22",
+        "vulnerability_type": "Path Traversal"
+      },
+      "target_parameter": "file",
+      "payload_used": "../vault_secret.txt",
+      "status_code": 422,
+      "latency_ms": 3.66,
+      "verdict": "INCONCLUSIVE",
+      "confidence": 0.4,
+      "explanation": "Response HTTP 422 with no signature match.",
+      "response_preview": "{\"detail\":[{\"type\":\"missing\",\"loc\":[\"body\",\"file\"],\"msg\":\"Field required\",\"input\":null}]}",
+      "execution_trace": [
+        {
+          "role": "CANDIDATE_TARGET",
+          "method": "POST",
+          "path": "/api/v1/vault/upload",
+          "status": 422,
+          "latency_ms": 3.66,
+          "payload_injected": "../vault_secret.txt",
+          "target_parameter": "file"
+        }
+      ]
+    },
+    {
+      "candidate": {
+        "path": "/api/v1/vault/tools/ping-backup",
+        "method": "POST",
+        "cwe_id": "CWE-918",
+        "vulnerability_type": "Server-Side Request Forgery"
+      },
+      "target_parameter": "host",
+      "payload_used": "http://127.0.0.1:8000/api/v1/internal/health",
+      "status_code": 400,
+      "latency_ms": 4.25,
+      "verdict": "INCONCLUSIVE",
+      "confidence": 0.4,
+      "explanation": "Ambiguous HTTP 400 response.",
+      "response_preview": "{\"detail\":\"Security Policy Violation: Custom command execution is prohibited (CWE-78 mitigation).\"}",
+      "execution_trace": [
+        {
+          "role": "CANDIDATE_TARGET",
+          "method": "POST",
+          "path": "/api/v1/vault/tools/ping-backup",
+          "status": 400,
+          "latency_ms": 4.25,
+          "payload_injected": "http://127.0.0.1:8000/api/v1/internal/health",
+          "target_parameter": "host"
+        }
+      ]
+    },
+    {
+      "candidate": {
+        "path": "/api/v1/vault/audit/logs",
+        "method": "POST",
+        "cwe_id": "CWE-79",
+        "vulnerability_type": "Cross-Site Scripting"
+      },
+      "target_parameter": "title",
+      "payload_used": "<script>alert('VoAPITestXSS')</script>",
+      "status_code": 200,
+      "latency_ms": 9.18,
+      "verdict": "NEGATIVE",
+      "confidence": 0.95,
+      "explanation": "Defended: HTML entities properly escaped and sanitized.",
+      "response_preview": "{\"id\":31,\"title\":\"&lt;script&gt;alert(&#x27;VoAPITestXSS&#x27;)&lt;/script&gt;\",\"comment\":\"VoAPI_NbaeCY\",\"content\":\"VoAPI_uTaKil\",\"user_agent\":\"testclient\",\"timestamp\":null}",
+      "execution_trace": [
+        {
+          "role": "CANDIDATE_TARGET",
+          "method": "POST",
+          "path": "/api/v1/vault/audit/logs",
+          "status": 200,
+          "latency_ms": 9.18,
+          "payload_injected": "<script>alert('VoAPITestXSS')</script>",
+          "target_parameter": "title"
+        },
+        {
+          "role": "TRIGGER",
+          "method": "GET",
+          "path": "/api/v1/vault/audit/logs",
+          "status": 200,
+          "latency_ms": 7.49
+        }
+      ]
+    },
+    {
+      "candidate": {
+        "path": "/api/v1/vault/items",
+        "method": "POST",
+        "cwe_id": "CWE-79",
+        "vulnerability_type": "Cross-Site Scripting"
+      },
+      "target_parameter": "name",
+      "payload_used": "<script>alert('VoAPITestXSS')</script>",
+      "status_code": 201,
+      "latency_ms": 9.01,
+      "verdict": "NEGATIVE",
+      "confidence": 0.95,
+      "explanation": "Defended: HTML entities properly escaped and sanitized.",
+      "response_preview": "{\"id\":\"902d3825\",\"name\":\"<script>alert('VoAPITestXSS')</script>\",\"description\":\"VoAPI_RgAlIx\",\"owner\":\"admin\"}",
+      "execution_trace": [
+        {
+          "role": "CANDIDATE_TARGET",
+          "method": "POST",
+          "path": "/api/v1/vault/items",
+          "status": 201,
+          "latency_ms": 9.01,
+          "payload_injected": "<script>alert('VoAPITestXSS')</script>",
+          "target_parameter": "name"
+        },
+        {
+          "role": "TRIGGER",
+          "method": "GET",
+          "path": "/api/v1/vault/audit/logs",
+          "status": 200,
+          "latency_ms": 20.61
+        }
+      ]
+    },
+    {
+      "candidate": {
+        "path": "/api/v1/vault/items/{id}",
+        "method": "GET",
+        "cwe_id": "CWE-89",
+        "vulnerability_type": "SQL Injection"
+      },
+      "target_parameter": "id",
+      "payload_used": "1' OR '1'='1' -- ",
+      "status_code": 404,
+      "latency_ms": 4.74,
+      "verdict": "NEGATIVE",
+      "confidence": 0.85,
+      "explanation": "No SQL injection symptoms detected.",
+      "response_preview": "{\"detail\":\"Vault item with id '1' OR '1'='1' -- ' was not found\"}",
+      "execution_trace": [
+        {
+          "role": "CANDIDATE_TARGET",
+          "method": "GET",
+          "path": "/api/v1/vault/items/1' OR '1'='1' -- ",
+          "status": 404,
+          "latency_ms": 4.74,
+          "payload_injected": "1' OR '1'='1' -- ",
+          "target_parameter": "id"
+        }
+      ]
+    },
+    {
+      "candidate": {
+        "path": "/api/v1/vault/items/{id}",
+        "method": "DELETE",
+        "cwe_id": "CWE-89",
+        "vulnerability_type": "SQL Injection"
+      },
+      "target_parameter": "id",
+      "payload_used": "1' OR '1'='1' -- ",
+      "status_code": 404,
+      "latency_ms": 3.82,
+      "verdict": "NEGATIVE",
+      "confidence": 0.85,
+      "explanation": "No SQL injection symptoms detected.",
+      "response_preview": "{\"detail\":\"Vault item with id '1' OR '1'='1' -- ' does not exist\"}",
+      "execution_trace": [
+        {
+          "role": "CANDIDATE_TARGET",
+          "method": "DELETE",
+          "path": "/api/v1/vault/items/1' OR '1'='1' -- ",
+          "status": 404,
+          "latency_ms": 3.82,
+          "payload_injected": "1' OR '1'='1' -- ",
+          "target_parameter": "id"
+        }
+      ]
+    }
+  ]
+}

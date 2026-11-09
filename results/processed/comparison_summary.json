@@ -1,0 +1,38 @@
+{
+  "benchmark_target": "SecureVault API (16 Operations)",
+  "vulnerable_mode": {
+    "baseline_random_fuzzing": {
+      "total_requests": 48,
+      "execution_time_ms": 1078.12,
+      "findings_count": 0
+    },
+    "voapi2_targeted_testing": {
+      "total_requests": 15,
+      "execution_time_ms": 162.81,
+      "candidate_interfaces_tested": 13,
+      "confirmed_vulnerabilities": 7,
+      "potential_vulnerabilities": 2,
+      "cwe_coverage": {
+        "CWE-918": 1,
+        "CWE-434": 1,
+        "CWE-22": 1,
+        "CWE-78": 1,
+        "CWE-89": 1,
+        "CWE-79": 1
+      }
+    }
+  },
+  "hardened_mode": {
+    "baseline_random_fuzzing": {
+      "total_requests": 48,
+      "execution_time_ms": 245.47,
+      "findings_count": 0
+    },
+    "voapi2_targeted_testing": {
+      "total_requests": 15,
+      "execution_time_ms": 95.81,
+      "negative_mitigations": 10,
+      "false_positives": 0
+    }
+  }
+}
