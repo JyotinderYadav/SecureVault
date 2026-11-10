@@ -4,7 +4,7 @@
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.162.2-009688.svg)](https://fastapi.tiangolo.com/)
 [![Streamlit](https://img.shields.io/badge/Streamlit-1.67.0-FF4B4B.svg)](https://streamlit.io/)
 [![Deploy to Streamlit Cloud](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://share.streamlit.io/deploy?repository=JyotinderYadav/SecureVault&branch=main&mainModule=streamlit_app.py)
-[![Tests](https://img.shields.io/badge/tests-26%2F26%20passing-brightgreen.svg)]()
+[![Tests](https://img.shields.io/badge/tests-28%2F28%20passing-brightgreen.svg)]()
 [![Platform](https://img.shields.io/badge/platform-macOS%20ARM64%20%7C%20Linux%20%7C%20Windows-lightgrey.svg)]()
 [![USENIX Security 2024](https://img.shields.io/badge/USENIX%20Security-2024%20Reproduction-blueviolet.svg)](https://www.usenix.org/conference/usenixsecurity24/presentation/du)
 
