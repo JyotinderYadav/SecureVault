@@ -127,3 +127,47 @@ def test_all_15_views_importable():
     assert len(views) == 15
     for v in views:
         assert callable(v)
+
+def test_cloud_environment_detection_and_safeguards(monkeypatch):
+    """Verify that cloud hosting environments strictly enforce HARDENED policy."""
+    from config.settings import SystemConfig, SecurityMode
+    
+    # Simulate cloud environment
+    monkeypatch.setattr("config.settings.IS_HOSTED", True)
+    cloud_config = SystemConfig()
+    assert cloud_config.is_hosted is True
+    assert cloud_config.mode == SecurityMode.HARDENED
+    assert cloud_config.is_hardened() is True
+    
+    # Attempt to switch to VULNERABLE must be rejected
+    res = cloud_config.set_mode("VULNERABLE")
+    assert res is False
+    assert cloud_config.mode == SecurityMode.HARDENED
+    
+    # Attempt to toggle must remain HARDENED
+    toggled = cloud_config.toggle_mode()
+    assert toggled == "HARDENED"
+    assert cloud_config.mode == SecurityMode.HARDENED
+
+def test_ui_app_navigation_structure():
+    """Verify Phase 7.3: exactly 15 modules organized across 6 groups."""
+    from ui.app import NAV_ITEMS, PAGE_MAP, GROUP_MAP
+    
+    assert len(NAV_ITEMS) == 15
+    assert len(PAGE_MAP) == 15
+    
+    # Verify the 6 groups
+    groups = set(GROUP_MAP.values())
+    expected_groups = {
+        "1. Overview",
+        "2. Research",
+        "3. Analysis Pipeline",
+        "4. Security Testing",
+        "5. Results",
+        "6. Documentation"
+    }
+    assert groups == expected_groups
+    
+    # Verify all callables
+    for name, func in PAGE_MAP.items():
+        assert callable(func)

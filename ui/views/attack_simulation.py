@@ -42,28 +42,44 @@ def render_attack_simulation_view():
     is_vuln = (curr_mode == "VULNERABLE")
     mode_badge_class = "badge-vulnerable" if is_vuln else "badge-hardened"
     
-    # Mode switch card
-    col_mode_info, col_toggle = st.columns([3.2, 1.2])
-    with col_mode_info:
+    # Mode switch card / Cloud Guard
+    if system_config.is_hosted:
         st.markdown(
-            f"""
-            <div style="background-color: #FFFFFF; border: 1px solid #E2E8F0; padding: 12px 18px; border-radius: 12px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);">
+            """
+            <div style="background-color: #FFFFFF; border: 1px solid #BBF7D0; border-left: 4px solid #10B981; padding: 12px 18px; border-radius: 12px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);">
                 <div>
-                    <span style="font-size: 0.85rem; color: #64748B; font-weight: 600;">ACTIVE TARGET SECURITY MODE:</span>
-                    <span class="{mode_badge_class}" style="margin-left: 10px;">{curr_mode}</span>
+                    <span style="font-size: 0.82rem; color: #166534; font-weight: 700;">CLOUD HOSTING POLICY:</span>
+                    <span class="badge-hardened" style="margin-left: 10px;">HARDENED DEFENSE ENFORCED</span>
                 </div>
-                <div style="font-size: 0.85rem; color: #64748B;">
-                    { 'Vulnerabilities are live & exploitable' if is_vuln else 'Defensive filters & parameterization active' }
+                <div style="font-size: 0.82rem; color: #475569;">
+                    Probes verify defensive controls. Intentionally vulnerable exploit mode is isolated to local testbeds.
                 </div>
             </div>
             """,
             unsafe_allow_html=True
         )
-    with col_toggle:
-        toggle_label = "Switch to HARDENED Mode" if is_vuln else "Switch to VULNERABLE Mode"
-        if st.button(toggle_label, key="lab_mode_toggle", use_container_width=True):
-            system_config.toggle_mode()
-            st.rerun()
+    else:
+        col_mode_info, col_toggle = st.columns([3.2, 1.2])
+        with col_mode_info:
+            st.markdown(
+                f"""
+                <div style="background-color: #FFFFFF; border: 1px solid #E2E8F0; padding: 12px 18px; border-radius: 12px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);">
+                    <div>
+                        <span style="font-size: 0.85rem; color: #64748B; font-weight: 600;">ACTIVE TARGET SECURITY MODE:</span>
+                        <span class="{mode_badge_class}" style="margin-left: 10px;">{curr_mode}</span>
+                    </div>
+                    <div style="font-size: 0.85rem; color: #64748B;">
+                        { 'Vulnerabilities are live & exploitable' if is_vuln else 'Defensive filters & parameterization active' }
+                    </div>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+        with col_toggle:
+            toggle_label = "Switch to HARDENED Mode" if is_vuln else "Switch to VULNERABLE Mode"
+            if st.button(toggle_label, key="lab_mode_toggle", use_container_width=True):
+                system_config.toggle_mode()
+                st.rerun()
 
     st.markdown("<div style='height: 16px;'></div>", unsafe_allow_html=True)
 

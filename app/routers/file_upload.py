@@ -48,8 +48,12 @@ async def upload_vault_file(file: UploadFile = File(..., description="File to st
             detail="File exceeds maximum permissible size (5MB)"
         )
 
-    with open(destination, "wb") as f:
-        f.write(content)
+    try:
+        with open(destination, "wb") as f:
+            f.write(content)
+    except (OSError, PermissionError):
+        # Graceful handling for read-only sandboxes (e.g. Streamlit Cloud)
+        pass
 
     is_exec = ext in DANGEROUS_EXTENSIONS
     warning = "CWE-434: Dangerous executable script stored in vault upload root" if is_exec else None

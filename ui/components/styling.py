@@ -260,6 +260,55 @@ CINEMATIC_CSS = """
     font-weight: 600;
 }
 
+.badge-confirmed {
+    background-color: #FEF2F2 !important;
+    color: #DC2626 !important;
+    border: 1px solid #FCA5A5 !important;
+    padding: 3px 10px;
+    border-radius: 9999px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.badge-negative {
+    background-color: #ECFDF5 !important;
+    color: #059669 !important;
+    border: 1px solid #6EE7B7 !important;
+    padding: 3px 10px;
+    border-radius: 9999px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.badge-potential {
+    background-color: #FFFBEB !important;
+    color: #D97706 !important;
+    border: 1px solid #FDE68A !important;
+    padding: 3px 10px;
+    border-radius: 9999px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.action-card {
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.action-card:hover {
+    transform: translateY(-3px) !important;
+    border-color: #087FC3 !important;
+    box-shadow: 0 12px 24px -4px rgba(8, 127, 195, 0.12) !important;
+}
+
 /* Callout Box */
 .cyber-callout-light {
     background-color: #F0F7FF;
@@ -422,6 +471,22 @@ def render_kpi_card(label: str, value: str, subtext: str = None, color: str = "#
         <div class="kpi-label">{label}</div>
         <div class="kpi-value" style="color: {color};">{value}</div>
         {sub_html}
+    </div>
+    """
+
+def render_action_card(title: str, description: str, icon: str = "⚡", badge: str = None, link_hint: str = None) -> str:
+    """Renders a sleek interactive action card inspired by Linear and Vercel."""
+    badge_html = f'<span class="badge-pill" style="font-size: 0.70rem;">{badge}</span>' if badge else ""
+    hint_html = f'<div style="font-size: 0.75rem; color: #087FC3; font-weight: 600; margin-top: 10px;">{link_hint} →</div>' if link_hint else ""
+    return f"""
+    <div class="light-card action-card" style="padding: 18px 20px; height: 100%; border-radius: 12px;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+            <div style="font-size: 1.5rem;">{icon}</div>
+            {badge_html}
+        </div>
+        <div style="font-weight: 700; color: #142238; font-size: 1.02rem; margin-bottom: 6px;">{title}</div>
+        <div style="font-size: 0.82rem; color: #63748B; line-height: 1.45;">{description}</div>
+        {hint_html}
     </div>
     """
 
