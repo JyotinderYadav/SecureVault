@@ -8,16 +8,13 @@ import time
 import streamlit as st
 import pandas as pd
 from config.settings import BASE_DIR, system_config
+from ui.models.findings import load_finding_records
 from ui.components.styling import render_hero
 
 def generate_markdown_report():
     vuln_log_path = BASE_DIR / "results" / "raw" / "voapi2_vulnerable_log.json"
-    findings = []
-    if vuln_log_path.exists():
-        with open(vuln_log_path, "r", encoding="utf-8") as f:
-            findings = json.load(f)
-
-    confirmed = [f for f in findings if f.get("verdict") == "CONFIRMED_VULNERABILITY"]
+    findings = load_finding_records(vuln_log_path)
+    confirmed = [f for f in findings if f.verdict == "CONFIRMED_VULNERABILITY"]
 
     report = f"""# SECUREVAULT — EXECUTIVE REST API SECURITY AUDIT REPORT
 **Project:** SecureVault: Vulnerability-Oriented Security Testing of RESTful APIs  

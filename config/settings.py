@@ -4,6 +4,9 @@ SecureVault Configuration Module
 import os
 from pathlib import Path
 
+# Ensure matplotlib uses a writable local cache dir
+os.environ.setdefault("MPLCONFIGDIR", "/tmp/matplotlib")
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 STORAGE_DIR = BASE_DIR / "app" / "storage" / "uploads"
 VAULT_STORAGE = BASE_DIR / "app" / "storage"
@@ -71,5 +74,5 @@ class SystemConfig:
         return self._mode == SecurityMode.HARDENED
 
 system_config = SystemConfig()
-JWT_SECRET = "securevault-cs473-secret-key-2026"
-JWT_ALGORITHM = "HS256"
+JWT_SECRET = os.getenv("JWT_SECRET", "securevault-cs473-secret-key-2026")
+JWT_ALGORITHM = os.getenv("JWT_ALGORITHM", "HS256")

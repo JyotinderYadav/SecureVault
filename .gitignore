@@ -38,6 +38,7 @@ venv.bak/
 .env
 .env.local
 .env.*.local
+*.pid
 
 # IDEs and Editors
 .vscode/

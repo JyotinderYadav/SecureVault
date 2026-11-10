@@ -1,10 +1,10 @@
 # SecureVault: Vulnerability-Oriented Security Testing of RESTful APIs
 
-[![Python Version](https://img.shields.io/badge/python-3.13-blue.svg)](https://www.python.org/)
+[![Python Version](https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12%20%7C%203.13-blue.svg)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.162.2-009688.svg)](https://fastapi.tiangolo.com/)
-[![Streamlit](https://img.shields.io/badge/Streamlit-1.66.1-FF4B4B.svg)](https://streamlit.io/)
-[![Tests](https://img.shields.io/badge/tests-15%2F15%20passing-brightgreen.svg)]()
-[![License](https://img.shields.io/badge/license-Academic%20Research-lightgrey.svg)]()
+[![Streamlit](https://img.shields.io/badge/Streamlit-1.67.0-FF4B4B.svg)](https://streamlit.io/)
+[![Tests](https://img.shields.io/badge/tests-26%2F26%20passing-brightgreen.svg)]()
+[![Platform](https://img.shields.io/badge/platform-macOS%20ARM64%20%7C%20Linux%20%7C%20Windows-lightgrey.svg)]()
 [![USENIX Security 2024](https://img.shields.io/badge/USENIX%20Security-2024%20Reproduction-blueviolet.svg)](https://www.usenix.org/conference/usenixsecurity24/presentation/du)
 
 **Academic Course:** CS-473 Cloud Security and Site Reliability Engineering (SRE)  
@@ -111,49 +111,59 @@ We benchmarked SecureVault against an unguided **Baseline Random Fuzzer** on the
 
 ---
 
-## 6. Installation & Reproduction Guide (Windows 11)
+## 6. Installation, Setup & Operation Guide
 
-### Prerequisites
-- Windows 10/11 (PowerShell or Command Prompt)
-- Python 3.10+ (Tested on Python 3.13.15)
-- Git
+### macOS / Apple Silicon (ARM64) & Linux Quickstart
 
-### Step 1: Clone and Navigate to the Workspace
-```powershell
-cd "d:\Academics\IIIT Dharwad Exams\Semester 7 (2026)\CLOUD SRE & SECURITY\SecureVault"
+#### Prerequisites
+- macOS 12+ (Apple Silicon M1/M2/M3/M4 or Intel) or Linux (Ubuntu 20.04+)
+- Python 3.10+ (`brew install python@3.11`)
+
+#### Step 1: Automated Environment Setup
+```bash
+./setup.sh
 ```
+This automated script:
+1. Detects your native Python installation.
+2. Provisions a virtual environment in `.venv`.
+3. Installs all required packages from `requirements.txt`.
+4. Initializes storage, seed canary keys, and creates the SQLite database.
+5. Verifies all module imports.
 
-### Step 2: Install Dependencies
-```powershell
-pip install -r requirements.txt
+#### Step 2: Start Backend & Frontend Services
+```bash
+./start.sh
 ```
+Starts both processes concurrently:
+- **Streamlit Interactive Research Lab:** `http://127.0.0.1:8501`
+- **FastAPI Backend & Interactive OpenAPI Docs:** `http://127.0.0.1:8000/docs`
+- **Public API Health Check:** `http://127.0.0.1:8000/api/v1/health`
 
-### Step 3: Run the Complete Pytest Verification Suite
-Verify that all 15 unit and integration tests pass cleanly:
-```powershell
-pytest -v
+#### Step 3: Stop Services
+```bash
+./stop.sh
 ```
-*(Expected: 15 passed in ~1.4s)*
+Gracefully terminates backend and frontend processes and frees ports 8000 and 8501.
 
-### Step 4: Run the Experimental Benchmarking Suite
-Execute the automated harness to regenerate all logs, summary metrics, publication tables, and figures:
-```powershell
-python experiments/benchmark_comparison/run_all_experiments.py
-```
-*(Outputs saved to `results/raw/`, `results/processed/`, `results/tables/`, `results/figures/`, `paper/tables/`, and `paper/figures/`)*
+---
 
-### Step 5: Launch the Interactive Streamlit Research Lab
-Launch the 14-page cybersecurity research laboratory:
-```powershell
-streamlit run ui/app.py
-```
-The application will open automatically in your browser at `http://localhost:8501`.
+### Automated Testing
 
-### Step 6: (Optional) Run the Dual-Mode FastAPI Testbed Independently
-```powershell
-python -m uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload
+Run the complete 26-test regression suite:
+```bash
+./.venv/bin/pytest -v
 ```
-Interactive OpenAPI documentation is available at `http://127.0.0.1:8000/docs`.
+*(All 26 tests pass in ~1.3 seconds)*
+
+---
+
+### Running Experiments & Regenerating Benchmarks
+
+Execute the automated benchmarking harness to regenerate all execution traces, CSV tables, and publication charts:
+```bash
+./.venv/bin/python experiments/benchmark_comparison/run_all_experiments.py
+```
+Outputs are automatically written to `results/raw/`, `results/processed/`, `results/tables/`, and `results/figures/`.
 
 ---
 
@@ -191,26 +201,34 @@ SecureVault/
 │   ├── tables/                             # Publication-ready CSV benchmark tables
 │   └── figures/                            # High-resolution (300 DPI) visualization figures
 │
-├── ui/                                     # Streamlit Interactive Research Lab
-│   ├── components/styling.py               # Dark slate cyber theme & custom CSS
-│   ├── views/                              # 14 modular views (Dashboard, Lab, Explorer, Analytics, etc.)
-│   └── app.py                              # Streamlit application entrypoint
+├── ui/                                     # Streamlit Interactive Research Lab (UI 2.0)
+│   ├── components/styling.py               # 65% Light / 35% Dark theme & bulletproof opaque sidebar CSS
+│   ├── components/network_graph.py         # 2D topological circular API network graph (Plotly)
+│   ├── components/pipeline_visualizer.py   # Interactive 4-stage pipeline visualizer
+│   ├── components/telemetry_console.py     # Live SRE telemetry event console widget
+│   ├── models/findings.py                  # Robust FindingRecord deserializer & data loader
+│   ├── views/                              # 15 modular views (Dashboard, Lab, Feedback Engine, Analytics, etc.)
+│   └── app.py                              # Streamlit application entrypoint (15 research modules)
 │
 ├── paper/                                  # Academic Publication Draft & Tables
 │   ├── research_paper.md                   # Full academic paper draft (USENIX / IEEE S&P format)
 │   ├── tables/                             # Embedded evaluation tables
 │   └── figures/                            # Embedded evaluation plots
 │
-├── tests/                                  # Pytest Automated Test Suite (15/15 Passing)
+├── tests/                                  # Pytest Automated Test Suite (26/26 Passing)
 │   ├── test_api_endpoints.py               # Testbed dual-mode verification (10 tests)
-│   └── test_framework_stages.py            # Stages 1-4 end-to-end testing (5 tests)
+│   ├── test_datasets_and_audit.py          # Datasets, SRE rules & DB operations (7 tests)
+│   ├── test_framework_stages.py            # Stages 1-4 end-to-end testing (5 tests)
+│   └── test_ui_and_models.py               # UI models, canonical parser & view imports (4 tests)
 │
 ├── docs/                                   # Research & Threat Modeling Documentation
+├── BUG_FIX_LOG.md                          # Comprehensive bug inventory & engineering resolution log
+├── QUALITY_AUDIT.md                        # Master engineering recovery & quality audit report
 ├── FINAL_AUDIT_REPORT.md                   # Independent QA & research audit verification
 ├── FINAL_TEST_RESULTS.md                   # Automated test execution telemetry (15/15 passing)
 ├── EXPERIMENT_REPRODUCIBILITY.md           # Reproduction protocol & SHA-256 artifact hashes
 ├── RESEARCH_LIMITATIONS.md                 # Academic disclosures & threats to validity
-├── PROGRESS.md                             # Comprehensive 8-phase development progress audit log
+├── PROGRESS.md                             # Comprehensive 9-phase development progress audit log
 └── requirements.txt                        # Python dependencies
 ```
 

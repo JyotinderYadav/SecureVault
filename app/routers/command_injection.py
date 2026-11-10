@@ -35,9 +35,17 @@ def ping_backup_node(payload: PingBackupRequest):
                 detail="Security Policy Violation: Hostname contains invalid shell metacharacters (CWE-78 mitigation)."
             )
         try:
-            # Safe non-shell execution
+            import sys
+            import shutil
+            # Safe non-shell execution across Windows and macOS/Linux
+            if sys.platform == "win32":
+                cmd_args = ["cmd.exe", "/c", f"echo [Vault Ping Tool] Node: {host_input}"]
+            else:
+                echo_bin = shutil.which("echo") or "/bin/echo"
+                cmd_args = [echo_bin, f"[Vault Ping Tool] Node: {host_input}"]
+
             proc = subprocess.run(
-                ["cmd.exe", "/c", f"echo [Vault Ping Tool] Node: {host_input}"],
+                cmd_args,
                 capture_output=True,
                 text=True,
                 timeout=5,

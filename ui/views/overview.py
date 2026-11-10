@@ -10,6 +10,8 @@ import plotly.express as px
 import plotly.graph_objects as go
 from config.settings import system_config, BASE_DIR
 from ui.components.styling import render_hero, render_kpi_card, render_dark_console
+from ui.components.pipeline_visualizer import render_pipeline_visualizer
+from ui.components.telemetry_console import render_telemetry_console_widget
 
 @st.cache_data
 def load_overview_data():
@@ -114,60 +116,7 @@ def render_overview_view():
         **VOAPI²** selectively extracts high-risk candidate interfaces and synthesizes valid state sequences:
         """
     )
-
-    s1, s2, s3, s4 = st.columns(4)
-    with s1:
-        st.markdown(
-            """
-            <div class="light-card" style="border-top: 4px solid #0284C7; height: 100%;">
-                <div style="font-weight: 700; color: #0284C7; font-size: 0.9rem; text-transform: uppercase;">Stage 1</div>
-                <div style="font-weight: 700; color: #0F172A; font-size: 1.05rem; margin: 4px 0 8px 0;">Specification Analysis</div>
-                <div style="font-size: 0.85rem; color: #64748B; line-height: 1.45;">
-                    Parses OpenAPI 2.0/3.0/3.1 & Swagger. Resolves recursive <code>$ref</code> schemas and normalizes parameters & request bodies.
-                </div>
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
-    with s2:
-        st.markdown(
-            """
-            <div class="light-card" style="border-top: 4px solid #0EA5E9; height: 100%;">
-                <div style="font-weight: 700; color: #0EA5E9; font-size: 0.9rem; text-transform: uppercase;">Stage 2</div>
-                <div style="font-weight: 700; color: #0F172A; font-size: 1.05rem; margin: 4px 0 8px 0;">Candidate Extraction</div>
-                <div style="font-size: 0.85rem; color: #64748B; line-height: 1.45;">
-                    Matches 72 path & 56 parameter keywords across 6 CWE classes. Prioritizes primary target parameters for injection.
-                </div>
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
-    with s3:
-        st.markdown(
-            """
-            <div class="light-card" style="border-top: 4px solid #0369A1; height: 100%;">
-                <div style="font-weight: 700; color: #0369A1; font-size: 0.9rem; text-transform: uppercase;">Stage 3</div>
-                <div style="font-weight: 700; color: #0F172A; font-size: 1.05rem; margin: 4px 0 8px 0;">Sequence Generation</div>
-                <div style="font-size: 0.85rem; color: #64748B; line-height: 1.45;">
-                    Executes Algorithm 1 (Reverse Sequence Construction). Resolves producer-consumer dependencies & prepares prerequisite state.
-                </div>
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
-    with s4:
-        st.markdown(
-            """
-            <div class="light-card" style="border-top: 4px solid #10B981; height: 100%;">
-                <div style="font-weight: 700; color: #10B981; font-size: 0.9rem; text-transform: uppercase;">Stage 4</div>
-                <div style="font-weight: 700; color: #0F172A; font-size: 1.05rem; margin: 4px 0 8px 0;">Feedback Testing</div>
-                <div style="font-size: 0.85rem; color: #64748B; line-height: 1.45;">
-                    Injects category-tailored benign probes. Verifies canary tokens, SQL tautologies, file leaks, and HTML unescaping.
-                </div>
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
+    render_pipeline_visualizer(active_stage=1)
 
     st.markdown("<div style='height: 20px;'></div>", unsafe_allow_html=True)
 
@@ -199,20 +148,7 @@ def render_overview_view():
 
     with col_telemetry:
         st.markdown("#### Live Telemetry Console (35% Dark Panel)")
-        telemetry_html = f"""
-        <div style="font-size: 0.85rem; line-height: 1.7; color: #E2E8F0;">
-            <div><span style="color: #38BDF8;">[SYSTEM_INIT]</span> API Gateway status: <b style="color: #10B981;">ONLINE (localhost:8000)</b></div>
-            <div><span style="color: #38BDF8;">[CONFIG_STATE]</span> Active Security Policy: <b style="color: {'#EF4444' if is_vuln else '#10B981'};">{curr_mode}</b></div>
-            <div><span style="color: #38BDF8;">[CORPUS_LOAD]</span> 541 CVE records parsed | 274 ground-truth verified</div>
-            <div><span style="color: #38BDF8;">[ALGORITHM_1]</span> Reverse Sequence Generator: Producer-Consumer engine ready</div>
-            <div><span style="color: #38BDF8;">[BENCHMARK]</span> Evaluated 422 operations across 4 benchmark specifications</div>
-            <div><span style="color: #38BDF8;">[TEST_SUITE]</span> Pytest unit/integration status: <b style="color: #10B981;">15/15 PASSED (100%)</b></div>
-            <div style="margin-top: 10px; padding-top: 8px; border-top: 1px dashed #334155; font-size: 0.78rem; color: #94A3B8;">
-                Speedup factor: <b style="color: #F59E0B;">{speedup}x faster</b> | Request reduction: <b style="color: #38BDF8;">{req_reduction}%</b>
-            </div>
-        </div>
-        """
-        st.markdown(render_dark_console("SecureVault Real-Time SRE Telemetry", telemetry_html, status_tag=curr_mode), unsafe_allow_html=True)
+        st.markdown(render_telemetry_console_widget(status_tag=curr_mode), unsafe_allow_html=True)
 
     st.markdown("<div style='height: 16px;'></div>", unsafe_allow_html=True)
 

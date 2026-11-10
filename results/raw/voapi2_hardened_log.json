@@ -2,7 +2,7 @@
   "strategy": "VOAPI2_TARGETED_TESTING",
   "total_candidates": 13,
   "total_requests": 15,
-  "total_time_ms": 88.39,
+  "total_time_ms": 59.58,
   "confirmed_vulnerabilities": 0,
   "potential_vulnerabilities": 1,
   "negative_verdicts": 10,
@@ -17,18 +17,21 @@
       "target_parameter": "file",
       "payload_used": "webshell.php",
       "status_code": 400,
-      "latency_ms": 4.08,
+      "latency_ms": 2.12,
       "verdict": "NEGATIVE",
       "confidence": 0.95,
       "explanation": "Defended: Upload rejected by extension or MIME type whitelist.",
+      "analysis": "Defended: Upload rejected by extension or MIME type whitelist.",
+      "evidence": [],
       "response_preview": "{\"detail\":\"Security Policy Violation: Upload of '.php' files is prohibited. Allowed: ['.csv', '.jpeg', '.jpg', '.json', '.pdf', '.png', '.txt']\"}",
+      "response_body": "{\"detail\":\"Security Policy Violation: Upload of '.php' files is prohibited. Allowed: ['.csv', '.jpeg', '.jpg', '.json', '.pdf', '.png', '.txt']\"}",
       "execution_trace": [
         {
           "role": "CANDIDATE_TARGET",
           "method": "POST",
           "path": "/api/v1/vault/upload",
           "status": 400,
-          "latency_ms": 4.08,
+          "latency_ms": 2.12,
           "payload_injected": "webshell.php",
           "target_parameter": "file"
         }
@@ -44,18 +47,25 @@
       "target_parameter": "filename",
       "payload_used": "webshell.php",
       "status_code": 200,
-      "latency_ms": 5.51,
+      "latency_ms": 3.32,
       "verdict": "POTENTIAL_VULNERABILITY",
       "confidence": 0.75,
       "explanation": "Script upload returned HTTP 200 without explicit rejection.",
+      "analysis": "Script upload returned HTTP 200 without explicit rejection.",
+      "evidence": [
+        "Oracle Verdict: POTENTIAL_VULNERABILITY (Confidence: 0.75)",
+        "Script upload returned HTTP 200 without explicit rejection.",
+        "Target returned HTTP 200 with vulnerable payload reflection / canary leak"
+      ],
       "response_preview": "{\"status\":\"SUCCESS\",\"requested_path\":\"webshell.php\",\"resolved_path\":\"webshell.php\",\"content\":\"<?php echo 'VoAPITestPhp'; ?>\",\"size_bytes\":29}",
+      "response_body": "{\"status\":\"SUCCESS\",\"requested_path\":\"webshell.php\",\"resolved_path\":\"webshell.php\",\"content\":\"<?php echo 'VoAPITestPhp'; ?>\",\"size_bytes\":29}",
       "execution_trace": [
         {
           "role": "CANDIDATE_TARGET",
           "method": "GET",
           "path": "/api/v1/vault/files/read",
           "status": 200,
-          "latency_ms": 5.51,
+          "latency_ms": 3.32,
           "payload_injected": "webshell.php",
           "target_parameter": "filename"
         }
@@ -71,18 +81,21 @@
       "target_parameter": "filename",
       "payload_used": "../vault_secret.txt",
       "status_code": 403,
-      "latency_ms": 4.86,
+      "latency_ms": 2.41,
       "verdict": "NEGATIVE",
       "confidence": 0.95,
       "explanation": "Defended: Traversal sequence blocked by canonical path verification.",
+      "analysis": "Defended: Traversal sequence blocked by canonical path verification.",
+      "evidence": [],
       "response_preview": "{\"detail\":\"Security Policy Violation: Path Traversal attempt blocked (CWE-22 mitigation).\"}",
+      "response_body": "{\"detail\":\"Security Policy Violation: Path Traversal attempt blocked (CWE-22 mitigation).\"}",
       "execution_trace": [
         {
           "role": "CANDIDATE_TARGET",
           "method": "GET",
           "path": "/api/v1/vault/files/read",
           "status": 403,
-          "latency_ms": 4.86,
+          "latency_ms": 2.41,
           "payload_injected": "../vault_secret.txt",
           "target_parameter": "filename"
         }
@@ -98,18 +111,21 @@
       "target_parameter": "cmd",
       "payload_used": "127.0.0.1 & echo VoAPICmdTest",
       "status_code": 400,
-      "latency_ms": 3.39,
+      "latency_ms": 2.41,
       "verdict": "NEGATIVE",
       "confidence": 0.85,
       "explanation": "Command injection not triggered.",
+      "analysis": "Command injection not triggered.",
+      "evidence": [],
       "response_preview": "{\"detail\":\"Security Policy Violation: Custom command execution is prohibited (CWE-78 mitigation).\"}",
+      "response_body": "{\"detail\":\"Security Policy Violation: Custom command execution is prohibited (CWE-78 mitigation).\"}",
       "execution_trace": [
         {
           "role": "CANDIDATE_TARGET",
           "method": "POST",
           "path": "/api/v1/vault/tools/ping-backup",
           "status": 400,
-          "latency_ms": 3.39,
+          "latency_ms": 2.41,
           "payload_injected": "127.0.0.1 & echo VoAPICmdTest",
           "target_parameter": "cmd"
         }
@@ -125,18 +141,21 @@
       "target_parameter": "query",
       "payload_used": "1' OR '1'='1' -- ",
       "status_code": 200,
-      "latency_ms": 4.69,
+      "latency_ms": 2.91,
       "verdict": "NEGATIVE",
       "confidence": 0.95,
       "explanation": "Defended: Parameterized query treated input as literal string.",
+      "analysis": "Defended: Parameterized query treated input as literal string.",
+      "evidence": [],
       "response_preview": "{\"status\":\"SUCCESS\",\"query_executed\":\"Parameterized Prepared Statement (?)\",\"count\":0,\"records\":[]}",
+      "response_body": "{\"status\":\"SUCCESS\",\"query_executed\":\"Parameterized Prepared Statement (?)\",\"count\":0,\"records\":[]}",
       "execution_trace": [
         {
           "role": "CANDIDATE_TARGET",
           "method": "GET",
           "path": "/api/v1/vault/records/search",
           "status": 200,
-          "latency_ms": 4.69,
+          "latency_ms": 2.91,
           "payload_injected": "1' OR '1'='1' -- ",
           "target_parameter": "query"
         }
@@ -152,18 +171,21 @@
       "target_parameter": "mode",
       "payload_used": "127.0.0.1 & echo VoAPICmdTest",
       "status_code": 400,
-      "latency_ms": 4.64,
+      "latency_ms": 2.33,
       "verdict": "NEGATIVE",
       "confidence": 0.95,
       "explanation": "Defended: Shell metacharacters rejected by input validation.",
+      "analysis": "Defended: Shell metacharacters rejected by input validation.",
+      "evidence": [],
       "response_preview": "{\"detail\":\"Invalid mode. Must be either 'VULNERABLE' or 'HARDENED'.\"}",
+      "response_body": "{\"detail\":\"Invalid mode. Must be either 'VULNERABLE' or 'HARDENED'.\"}",
       "execution_trace": [
         {
           "role": "CANDIDATE_TARGET",
           "method": "POST",
           "path": "/api/v1/system/mode",
           "status": 400,
-          "latency_ms": 4.64,
+          "latency_ms": 2.33,
           "payload_injected": "127.0.0.1 & echo VoAPICmdTest",
           "target_parameter": "mode"
         }
@@ -179,18 +201,21 @@
       "target_parameter": "url",
       "payload_used": "http://127.0.0.1:8000/api/v1/internal/health",
       "status_code": 403,
-      "latency_ms": 7.17,
+      "latency_ms": 4.8,
       "verdict": "NEGATIVE",
       "confidence": 0.95,
       "explanation": "Defended: Destination address strictly blocked by network validation policy.",
+      "analysis": "Defended: Destination address strictly blocked by network validation policy.",
+      "evidence": [],
       "response_preview": "{\"detail\":\"Security Policy Violation: Access to private or loopback IP (127.0.0.1) is blocked.\"}",
+      "response_body": "{\"detail\":\"Security Policy Violation: Access to private or loopback IP (127.0.0.1) is blocked.\"}",
       "execution_trace": [
         {
           "role": "CANDIDATE_TARGET",
           "method": "POST",
           "path": "/api/v1/vault/sync",
           "status": 403,
-          "latency_ms": 7.17,
+          "latency_ms": 4.8,
           "payload_injected": "http://127.0.0.1:8000/api/v1/internal/health",
           "target_parameter": "url"
         }
@@ -206,18 +231,21 @@
       "target_parameter": "file",
       "payload_used": "../vault_secret.txt",
       "status_code": 422,
-      "latency_ms": 3.01,
+      "latency_ms": 1.99,
       "verdict": "INCONCLUSIVE",
       "confidence": 0.4,
       "explanation": "Response HTTP 422 with no signature match.",
+      "analysis": "Response HTTP 422 with no signature match.",
+      "evidence": [],
       "response_preview": "{\"detail\":[{\"type\":\"missing\",\"loc\":[\"body\",\"file\"],\"msg\":\"Field required\",\"input\":null}]}",
+      "response_body": "{\"detail\":[{\"type\":\"missing\",\"loc\":[\"body\",\"file\"],\"msg\":\"Field required\",\"input\":null}]}",
       "execution_trace": [
         {
           "role": "CANDIDATE_TARGET",
           "method": "POST",
           "path": "/api/v1/vault/upload",
           "status": 422,
-          "latency_ms": 3.01,
+          "latency_ms": 1.99,
           "payload_injected": "../vault_secret.txt",
           "target_parameter": "file"
         }
@@ -233,18 +261,21 @@
       "target_parameter": "host",
       "payload_used": "http://127.0.0.1:8000/api/v1/internal/health",
       "status_code": 400,
-      "latency_ms": 4.03,
+      "latency_ms": 2.53,
       "verdict": "INCONCLUSIVE",
       "confidence": 0.4,
       "explanation": "Ambiguous HTTP 400 response.",
+      "analysis": "Ambiguous HTTP 400 response.",
+      "evidence": [],
       "response_preview": "{\"detail\":\"Security Policy Violation: Custom command execution is prohibited (CWE-78 mitigation).\"}",
+      "response_body": "{\"detail\":\"Security Policy Violation: Custom command execution is prohibited (CWE-78 mitigation).\"}",
       "execution_trace": [
         {
           "role": "CANDIDATE_TARGET",
           "method": "POST",
           "path": "/api/v1/vault/tools/ping-backup",
           "status": 400,
-          "latency_ms": 4.03,
+          "latency_ms": 2.53,
           "payload_injected": "http://127.0.0.1:8000/api/v1/internal/health",
           "target_parameter": "host"
         }
@@ -260,27 +291,30 @@
       "target_parameter": "title",
       "payload_used": "<script>alert('VoAPITestXSS')</script>",
       "status_code": 200,
-      "latency_ms": 10.04,
+      "latency_ms": 8.15,
       "verdict": "NEGATIVE",
-      "confidence": 0.95,
-      "explanation": "Defended: HTML entities properly escaped and sanitized.",
-      "response_preview": "{\"id\":59,\"title\":\"&lt;script&gt;alert(&#x27;VoAPITestXSS&#x27;)&lt;/script&gt;\",\"comment\":\"VoAPI_tIgDoe\",\"content\":\"VoAPI_sneDbi\",\"user_agent\":\"testclient\",\"timestamp\":null}",
+      "confidence": 0.85,
+      "explanation": "Payload safely escaped or not reflected.",
+      "analysis": "Payload safely escaped or not reflected.",
+      "evidence": [],
+      "response_preview": "{\"id\":121,\"title\":\"&lt;script&gt;alert(&#x27;VoAPITestXSS&#x27;)&lt;/script&gt;\",\"comment\":\"VoAPI_gGlUdX\",\"content\":\"VoAPI_FuuGQz\",\"user_agent\":\"testclient\",\"timestamp\":null}",
+      "response_body": "{\"id\":121,\"title\":\"&lt;script&gt;alert(&#x27;VoAPITestXSS&#x27;)&lt;/script&gt;\",\"comment\":\"VoAPI_gGlUdX\",\"content\":\"VoAPI_FuuGQz\",\"user_agent\":\"testclient\",\"timestamp\":null}",
       "execution_trace": [
         {
           "role": "CANDIDATE_TARGET",
           "method": "POST",
           "path": "/api/v1/vault/audit/logs",
           "status": 200,
-          "latency_ms": 10.04,
+          "latency_ms": 8.15,
           "payload_injected": "<script>alert('VoAPITestXSS')</script>",
           "target_parameter": "title"
         },
         {
           "role": "TRIGGER",
           "method": "GET",
-          "path": "/api/v1/vault/audit/logs",
+          "path": "/api/v1/vault/audit/logs/view",
           "status": 200,
-          "latency_ms": 7.18
+          "latency_ms": 5.18
         }
       ]
     },
@@ -294,33 +328,36 @@
       "target_parameter": "name",
       "payload_used": "<script>alert('VoAPITestXSS')</script>",
       "status_code": 201,
-      "latency_ms": 10.15,
+      "latency_ms": 7.84,
       "verdict": "NEGATIVE",
-      "confidence": 0.95,
-      "explanation": "Defended: HTML entities properly escaped and sanitized.",
-      "response_preview": "{\"id\":\"76b244fc\",\"name\":\"<script>alert('VoAPITestXSS')</script>\",\"description\":\"VoAPI_ZobfKb\",\"owner\":\"admin\"}",
+      "confidence": 0.85,
+      "explanation": "Payload safely escaped or not reflected.",
+      "analysis": "Payload safely escaped or not reflected.",
+      "evidence": [],
+      "response_preview": "{\"id\":\"aa238805\",\"name\":\"<script>alert('VoAPITestXSS')</script>\",\"description\":\"VoAPI_hdndDu\",\"owner\":\"admin\"}",
+      "response_body": "{\"id\":\"aa238805\",\"name\":\"<script>alert('VoAPITestXSS')</script>\",\"description\":\"VoAPI_hdndDu\",\"owner\":\"admin\"}",
       "execution_trace": [
         {
           "role": "CANDIDATE_TARGET",
           "method": "POST",
           "path": "/api/v1/vault/items",
           "status": 201,
-          "latency_ms": 10.15,
+          "latency_ms": 7.84,
           "payload_injected": "<script>alert('VoAPITestXSS')</script>",
           "target_parameter": "name"
         },
         {
           "role": "TRIGGER",
           "method": "GET",
-          "path": "/api/v1/vault/audit/logs",
+          "path": "/api/v1/vault/audit/logs/view",
           "status": 200,
-          "latency_ms": 7.41
+          "latency_ms": 3.92
         }
       ]
     },
     {
       "candidate": {
-        "path": "/api/v1/vault/items/{id}",
+        "path": "/api/v1/vault/items/1' OR '1'='1' -- ",
         "method": "GET",
         "cwe_id": "CWE-89",
         "vulnerability_type": "SQL Injection"
@@ -328,18 +365,21 @@
       "target_parameter": "id",
       "payload_used": "1' OR '1'='1' -- ",
       "status_code": 404,
-      "latency_ms": 4.74,
+      "latency_ms": 2.82,
       "verdict": "NEGATIVE",
       "confidence": 0.85,
       "explanation": "No SQL injection symptoms detected.",
+      "analysis": "No SQL injection symptoms detected.",
+      "evidence": [],
       "response_preview": "{\"detail\":\"Vault item with id '1' OR '1'='1' -- ' was not found\"}",
+      "response_body": "{\"detail\":\"Vault item with id '1' OR '1'='1' -- ' was not found\"}",
       "execution_trace": [
         {
           "role": "CANDIDATE_TARGET",
           "method": "GET",
           "path": "/api/v1/vault/items/1' OR '1'='1' -- ",
           "status": 404,
-          "latency_ms": 4.74,
+          "latency_ms": 2.82,
           "payload_injected": "1' OR '1'='1' -- ",
           "target_parameter": "id"
         }
@@ -347,7 +387,7 @@
     },
     {
       "candidate": {
-        "path": "/api/v1/vault/items/{id}",
+        "path": "/api/v1/vault/items/1' OR '1'='1' -- ",
         "method": "DELETE",
         "cwe_id": "CWE-89",
         "vulnerability_type": "SQL Injection"
@@ -355,18 +395,21 @@
       "target_parameter": "id",
       "payload_used": "1' OR '1'='1' -- ",
       "status_code": 404,
-      "latency_ms": 3.93,
+      "latency_ms": 2.86,
       "verdict": "NEGATIVE",
       "confidence": 0.85,
       "explanation": "No SQL injection symptoms detected.",
+      "analysis": "No SQL injection symptoms detected.",
+      "evidence": [],
       "response_preview": "{\"detail\":\"Vault item with id '1' OR '1'='1' -- ' does not exist\"}",
+      "response_body": "{\"detail\":\"Vault item with id '1' OR '1'='1' -- ' does not exist\"}",
       "execution_trace": [
         {
           "role": "CANDIDATE_TARGET",
           "method": "DELETE",
           "path": "/api/v1/vault/items/1' OR '1'='1' -- ",
           "status": 404,
-          "latency_ms": 3.93,
+          "latency_ms": 2.86,
           "payload_injected": "1' OR '1'='1' -- ",
           "target_parameter": "id"
         }

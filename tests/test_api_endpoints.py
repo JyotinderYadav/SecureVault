@@ -30,9 +30,25 @@ def test_system_mode_toggle():
     assert system_config.is_vulnerable()
 
 def test_auth_login():
+    # Valid credentials
     r = client.post("/api/v1/auth/login", json={"username": "admin", "password": "adminpass123"})
     assert r.status_code == 200
-    assert "access_token" in r.json()
+    token_data = r.json()
+    assert "access_token" in token_data
+    token = token_data["access_token"]
+
+    # Invalid credentials
+    r_bad = client.post("/api/v1/auth/login", json={"username": "admin", "password": "wrongpassword"})
+    assert r_bad.status_code == 401
+
+    # Protected endpoint with valid token
+    r_me = client.get("/api/v1/auth/me", headers={"Authorization": f"Bearer {token}"})
+    assert r_me.status_code == 200
+    assert r_me.json()["username"] == "admin"
+
+    # Protected endpoint without token
+    r_unauth = client.get("/api/v1/auth/me")
+    assert r_unauth.status_code == 401
 
 def test_sql_injection_dual_mode():
     # 1. Test in VULNERABLE mode: Tautology should return all records
@@ -73,6 +89,11 @@ def test_command_injection_dual_mode():
     system_config.set_mode("HARDENED")
     r_hard = client.post("/api/v1/vault/tools/ping-backup", json={"host": payload})
     assert r_hard.status_code == 400
+
+    # 3. Test in HARDENED mode: Valid host executes safely without shell
+    r_valid = client.post("/api/v1/vault/tools/ping-backup", json={"host": "127.0.0.1"})
+    assert r_valid.status_code == 200
+    assert r_valid.json()["exit_code"] == 0
 
 def test_file_upload_dual_mode():
     # 1. Test in VULNERABLE mode: Dangerous php extension allowed

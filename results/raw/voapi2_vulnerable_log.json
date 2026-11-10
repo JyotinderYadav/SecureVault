@@ -2,7 +2,7 @@
   "strategy": "VOAPI2_TARGETED_TESTING",
   "total_candidates": 13,
   "total_requests": 15,
-  "total_time_ms": 151.91,
+  "total_time_ms": 133.4,
   "confirmed_vulnerabilities": 7,
   "potential_vulnerabilities": 2,
   "negative_verdicts": 3,
@@ -17,18 +17,25 @@
       "target_parameter": "file",
       "payload_used": "webshell.php",
       "status_code": 200,
-      "latency_ms": 4.32,
+      "latency_ms": 2.72,
       "verdict": "CONFIRMED_VULNERABILITY",
       "confidence": 1.0,
       "explanation": "Unrestricted Upload confirmed: dangerous executable extension accepted and stored.",
+      "analysis": "Unrestricted Upload confirmed: dangerous executable extension accepted and stored.",
+      "evidence": [
+        "Oracle Verdict: CONFIRMED_VULNERABILITY (Confidence: 1.00)",
+        "Unrestricted Upload confirmed: dangerous executable extension accepted and stored.",
+        "Target returned HTTP 200 with vulnerable payload reflection / canary leak"
+      ],
       "response_preview": "{\"status\":\"STORED\",\"filename\":\"webshell.php\",\"saved_path\":\"/storage/uploads/webshell.php\",\"content_type\":\"application/x-php\",\"size_bytes\":29,\"is_executable\":true,\"warning\":\"CWE-434: Dangerous executable script stored in vault upload root\"}",
+      "response_body": "{\"status\":\"STORED\",\"filename\":\"webshell.php\",\"saved_path\":\"/storage/uploads/webshell.php\",\"content_type\":\"application/x-php\",\"size_bytes\":29,\"is_executable\":true,\"warning\":\"CWE-434: Dangerous executable script stored in vault upload root\"}",
       "execution_trace": [
         {
           "role": "CANDIDATE_TARGET",
           "method": "POST",
           "path": "/api/v1/vault/upload",
           "status": 200,
-          "latency_ms": 4.32,
+          "latency_ms": 2.72,
           "payload_injected": "webshell.php",
           "target_parameter": "file"
         }
@@ -44,18 +51,25 @@
       "target_parameter": "filename",
       "payload_used": "webshell.php",
       "status_code": 200,
-      "latency_ms": 6.56,
+      "latency_ms": 6.38,
       "verdict": "POTENTIAL_VULNERABILITY",
       "confidence": 0.75,
       "explanation": "Script upload returned HTTP 200 without explicit rejection.",
+      "analysis": "Script upload returned HTTP 200 without explicit rejection.",
+      "evidence": [
+        "Oracle Verdict: POTENTIAL_VULNERABILITY (Confidence: 0.75)",
+        "Script upload returned HTTP 200 without explicit rejection.",
+        "Target returned HTTP 200 with vulnerable payload reflection / canary leak"
+      ],
       "response_preview": "{\"status\":\"SUCCESS\",\"requested_path\":\"webshell.php\",\"resolved_path\":\"webshell.php\",\"content\":\"<?php echo 'VoAPITestPhp'; ?>\",\"size_bytes\":29}",
+      "response_body": "{\"status\":\"SUCCESS\",\"requested_path\":\"webshell.php\",\"resolved_path\":\"webshell.php\",\"content\":\"<?php echo 'VoAPITestPhp'; ?>\",\"size_bytes\":29}",
       "execution_trace": [
         {
           "role": "CANDIDATE_TARGET",
           "method": "GET",
           "path": "/api/v1/vault/files/read",
           "status": 200,
-          "latency_ms": 6.56,
+          "latency_ms": 6.38,
           "payload_injected": "webshell.php",
           "target_parameter": "filename"
         }
@@ -71,18 +85,25 @@
       "target_parameter": "filename",
       "payload_used": "../vault_secret.txt",
       "status_code": 200,
-      "latency_ms": 4.11,
+      "latency_ms": 3.8,
       "verdict": "CONFIRMED_VULNERABILITY",
       "confidence": 1.0,
       "explanation": "Path Traversal confirmed: unauthorized file contents leaked from outside root.",
+      "analysis": "Path Traversal confirmed: unauthorized file contents leaked from outside root.",
+      "evidence": [
+        "Oracle Verdict: CONFIRMED_VULNERABILITY (Confidence: 1.00)",
+        "Path Traversal confirmed: unauthorized file contents leaked from outside root.",
+        "Target returned HTTP 200 with vulnerable payload reflection / canary leak"
+      ],
       "response_preview": "{\"status\":\"SUCCESS\",\"requested_path\":\"../vault_secret.txt\",\"resolved_path\":\"vault_secret.txt\",\"content\":\"VAULT_SECRET_KEY=SECUREVAULT_FLAG_{PATH_TRAVERSAL_CWE_22_VERIFIED}\\nCONFIDENTIAL_METRIC_DATA=VaultRoot_Access_Granted_2026\\n\\n\",\"size_bytes\":123}",
+      "response_body": "{\"status\":\"SUCCESS\",\"requested_path\":\"../vault_secret.txt\",\"resolved_path\":\"vault_secret.txt\",\"content\":\"VAULT_SECRET_KEY=SECUREVAULT_FLAG_{PATH_TRAVERSAL_CWE_22_VERIFIED}\\nCONFIDENTIAL_METRIC_DATA=VaultRoot_Access_Granted_2026\\n\\n\",\"size_bytes\":123}",
       "execution_trace": [
         {
           "role": "CANDIDATE_TARGET",
           "method": "GET",
           "path": "/api/v1/vault/files/read",
           "status": 200,
-          "latency_ms": 4.11,
+          "latency_ms": 3.8,
           "payload_injected": "../vault_secret.txt",
           "target_parameter": "filename"
         }
@@ -98,18 +119,25 @@
       "target_parameter": "cmd",
       "payload_used": "127.0.0.1 & echo VoAPICmdTest",
       "status_code": 200,
-      "latency_ms": 36.34,
+      "latency_ms": 32.63,
       "verdict": "CONFIRMED_VULNERABILITY",
       "confidence": 1.0,
       "explanation": "Command Injection confirmed: injected probe string 'VoAPICmdTest' executed and reflected in output.",
+      "analysis": "Command Injection confirmed: injected probe string 'VoAPICmdTest' executed and reflected in output.",
+      "evidence": [
+        "Oracle Verdict: CONFIRMED_VULNERABILITY (Confidence: 1.00)",
+        "Command Injection confirmed: injected probe string 'VoAPICmdTest' executed and reflected in output.",
+        "Target returned HTTP 200 with vulnerable payload reflection / canary leak"
+      ],
       "response_preview": "{\"status\":\"SUCCESS\",\"target_host\":\"127.0.0.1\",\"command_executed\":\"echo [Vault Ping Tool] Node: 127.0.0.1 & 127.0.0.1 & echo VoAPICmdTest\",\"output\":\"[Vault Ping Tool] Node: 127.0.0.1 \\nVoAPICmdTest\",\"exit_code\":0}",
+      "response_body": "{\"status\":\"SUCCESS\",\"target_host\":\"127.0.0.1\",\"command_executed\":\"echo [Vault Ping Tool] Node: 127.0.0.1 & 127.0.0.1 & echo VoAPICmdTest\",\"output\":\"[Vault Ping Tool] Node: 127.0.0.1 \\nVoAPICmdTest\",\"exit_code\":0}",
       "execution_trace": [
         {
           "role": "CANDIDATE_TARGET",
           "method": "POST",
           "path": "/api/v1/vault/tools/ping-backup",
           "status": 200,
-          "latency_ms": 36.34,
+          "latency_ms": 32.63,
           "payload_injected": "127.0.0.1 & echo VoAPICmdTest",
           "target_parameter": "cmd"
         }
@@ -125,18 +153,24 @@
       "target_parameter": "query",
       "payload_used": "1' OR '1'='1' -- ",
       "status_code": 500,
-      "latency_ms": 4.78,
+      "latency_ms": 3.01,
       "verdict": "POTENTIAL_VULNERABILITY",
       "confidence": 0.85,
       "explanation": "SQL Injection potential: unhandled database error message exposed in response.",
+      "analysis": "SQL Injection potential: unhandled database error message exposed in response.",
+      "evidence": [
+        "Oracle Verdict: POTENTIAL_VULNERABILITY (Confidence: 0.85)",
+        "SQL Injection potential: unhandled database error message exposed in response."
+      ],
       "response_preview": "{\"detail\":\"Database Query Error [SQLite]: incomplete input\"}",
+      "response_body": "{\"detail\":\"Database Query Error [SQLite]: incomplete input\"}",
       "execution_trace": [
         {
           "role": "CANDIDATE_TARGET",
           "method": "GET",
           "path": "/api/v1/vault/records/search",
           "status": 500,
-          "latency_ms": 4.78,
+          "latency_ms": 3.01,
           "payload_injected": "1' OR '1'='1' -- ",
           "target_parameter": "query"
         }
@@ -152,18 +186,21 @@
       "target_parameter": "mode",
       "payload_used": "127.0.0.1 & echo VoAPICmdTest",
       "status_code": 400,
-      "latency_ms": 3.54,
+      "latency_ms": 2.45,
       "verdict": "NEGATIVE",
       "confidence": 0.95,
       "explanation": "Defended: Shell metacharacters rejected by input validation.",
+      "analysis": "Defended: Shell metacharacters rejected by input validation.",
+      "evidence": [],
       "response_preview": "{\"detail\":\"Invalid mode. Must be either 'VULNERABLE' or 'HARDENED'.\"}",
+      "response_body": "{\"detail\":\"Invalid mode. Must be either 'VULNERABLE' or 'HARDENED'.\"}",
       "execution_trace": [
         {
           "role": "CANDIDATE_TARGET",
           "method": "POST",
           "path": "/api/v1/system/mode",
           "status": 400,
-          "latency_ms": 3.54,
+          "latency_ms": 2.45,
           "payload_injected": "127.0.0.1 & echo VoAPICmdTest",
           "target_parameter": "mode"
         }
@@ -179,18 +216,25 @@
       "target_parameter": "url",
       "payload_used": "http://127.0.0.1:8000/api/v1/internal/health",
       "status_code": 200,
-      "latency_ms": 3.32,
+      "latency_ms": 3.74,
       "verdict": "CONFIRMED_VULNERABILITY",
       "confidence": 1.0,
       "explanation": "SSRF triggered: internal service response and private loopback flag exposed.",
-      "response_preview": "{\"status\":\"SUCCESS\",\"target_url\":\"http://127.0.0.1:8000/api/v1/internal/health\",\"fetched_bytes\":142,\"content_preview\":\"{\\\"service\\\": \\\"VaultInternalKeyReleaseService\\\", \\\"status\\\": \\\"ONLINE\\\", \\\"internal_flag\\\": \\\"SECUREVAULT_FLAG_{SSRF_CWE_918_VERIFIED}\\\"}\",\"cwe_detected\":\"CWE-918: Server-Side Requ",
+      "analysis": "SSRF triggered: internal service response and private loopback flag exposed.",
+      "evidence": [
+        "Oracle Verdict: CONFIRMED_VULNERABILITY (Confidence: 1.00)",
+        "SSRF triggered: internal service response and private loopback flag exposed.",
+        "Target returned HTTP 200 with vulnerable payload reflection / canary leak"
+      ],
+      "response_preview": "{\"status\":\"SUCCESS\",\"target_url\":\"http://127.0.0.1:8000/api/v1/internal/health\",\"fetched_bytes\":142,\"content_preview\":\"{\\\"service\\\": \\\"VaultInternalKeyReleaseService\\\", \\\"status\\\": \\\"ONLINE\\\", \\\"internal_flag\\\": \\\"SECUREVAULT_FLAG_{SSRF_CWE_918_VERIFIED}\\\"}\",\"cwe_detected\":\"CWE-918: Server-Side Request Forgery Triggered\"}",
+      "response_body": "{\"status\":\"SUCCESS\",\"target_url\":\"http://127.0.0.1:8000/api/v1/internal/health\",\"fetched_bytes\":142,\"content_preview\":\"{\\\"service\\\": \\\"VaultInternalKeyReleaseService\\\", \\\"status\\\": \\\"ONLINE\\\", \\\"internal_flag\\\": \\\"SECUREVAULT_FLAG_{SSRF_CWE_918_VERIFIED}\\\"}\",\"cwe_detected\":\"CWE-918: Server-Side Request Forgery Triggered\"}",
       "execution_trace": [
         {
           "role": "CANDIDATE_TARGET",
           "method": "POST",
           "path": "/api/v1/vault/sync",
           "status": 200,
-          "latency_ms": 3.32,
+          "latency_ms": 3.74,
           "payload_injected": "http://127.0.0.1:8000/api/v1/internal/health",
           "target_parameter": "url"
         }
@@ -206,18 +250,21 @@
       "target_parameter": "file",
       "payload_used": "../vault_secret.txt",
       "status_code": 422,
-      "latency_ms": 3.22,
+      "latency_ms": 2.31,
       "verdict": "INCONCLUSIVE",
       "confidence": 0.4,
       "explanation": "Response HTTP 422 with no signature match.",
+      "analysis": "Response HTTP 422 with no signature match.",
+      "evidence": [],
       "response_preview": "{\"detail\":[{\"type\":\"missing\",\"loc\":[\"body\",\"file\"],\"msg\":\"Field required\",\"input\":null}]}",
+      "response_body": "{\"detail\":[{\"type\":\"missing\",\"loc\":[\"body\",\"file\"],\"msg\":\"Field required\",\"input\":null}]}",
       "execution_trace": [
         {
           "role": "CANDIDATE_TARGET",
           "method": "POST",
           "path": "/api/v1/vault/upload",
           "status": 422,
-          "latency_ms": 3.22,
+          "latency_ms": 2.31,
           "payload_injected": "../vault_secret.txt",
           "target_parameter": "file"
         }
@@ -233,18 +280,25 @@
       "target_parameter": "host",
       "payload_used": "http://127.0.0.1:8000/api/v1/internal/health",
       "status_code": 200,
-      "latency_ms": 36.28,
+      "latency_ms": 41.25,
       "verdict": "CONFIRMED_VULNERABILITY",
       "confidence": 0.95,
       "explanation": "SSRF confirmed: successful HTTP 200 retrieval from loopback/metadata address.",
-      "response_preview": "{\"status\":\"SUCCESS\",\"target_host\":\"http://127.0.0.1:8000/api/v1/internal/health\",\"command_executed\":\"echo [Vault Ping Tool] Node: http://127.0.0.1:8000/api/v1/internal/health & VoAPI_MYDiwp\",\"output\":\"[Vault Ping Tool] Node: http://127.0.0.1:8000/api/v1/internal/health\",\"exit_code\":1}",
+      "analysis": "SSRF confirmed: successful HTTP 200 retrieval from loopback/metadata address.",
+      "evidence": [
+        "Oracle Verdict: CONFIRMED_VULNERABILITY (Confidence: 0.95)",
+        "SSRF confirmed: successful HTTP 200 retrieval from loopback/metadata address.",
+        "Target returned HTTP 200 with vulnerable payload reflection / canary leak"
+      ],
+      "response_preview": "{\"status\":\"SUCCESS\",\"target_host\":\"http://127.0.0.1:8000/api/v1/internal/health\",\"command_executed\":\"echo [Vault Ping Tool] Node: http://127.0.0.1:8000/api/v1/internal/health & VoAPI_qIjzOK\",\"output\":\"[Vault Ping Tool] Node: http://127.0.0.1:8000/api/v1/internal/health\",\"exit_code\":1}",
+      "response_body": "{\"status\":\"SUCCESS\",\"target_host\":\"http://127.0.0.1:8000/api/v1/internal/health\",\"command_executed\":\"echo [Vault Ping Tool] Node: http://127.0.0.1:8000/api/v1/internal/health & VoAPI_qIjzOK\",\"output\":\"[Vault Ping Tool] Node: http://127.0.0.1:8000/api/v1/internal/health\",\"exit_code\":1}",
       "execution_trace": [
         {
           "role": "CANDIDATE_TARGET",
           "method": "POST",
           "path": "/api/v1/vault/tools/ping-backup",
           "status": 200,
-          "latency_ms": 36.28,
+          "latency_ms": 41.25,
           "payload_injected": "http://127.0.0.1:8000/api/v1/internal/health",
           "target_parameter": "host"
         }
@@ -260,27 +314,34 @@
       "target_parameter": "title",
       "payload_used": "<script>alert('VoAPITestXSS')</script>",
       "status_code": 200,
-      "latency_ms": 9.38,
+      "latency_ms": 8.77,
       "verdict": "CONFIRMED_VULNERABILITY",
       "confidence": 1.0,
       "explanation": "XSS confirmed: unescaped executable script payload stored and reflected in markup.",
-      "response_preview": "{\"id\":55,\"title\":\"<script>alert('VoAPITestXSS')</script>\",\"comment\":\"VoAPI_bmwKLA\",\"content\":\"VoAPI_kXaUBx\",\"user_agent\":\"testclient\",\"timestamp\":null}",
+      "analysis": "XSS confirmed: unescaped executable script payload stored and reflected in markup.",
+      "evidence": [
+        "Oracle Verdict: CONFIRMED_VULNERABILITY (Confidence: 1.00)",
+        "XSS confirmed: unescaped executable script payload stored and reflected in markup.",
+        "Target returned HTTP 200 with vulnerable payload reflection / canary leak"
+      ],
+      "response_preview": "{\"id\":117,\"title\":\"<script>alert('VoAPITestXSS')</script>\",\"comment\":\"VoAPI_XvkvvG\",\"content\":\"VoAPI_rjJteu\",\"user_agent\":\"testclient\",\"timestamp\":null}",
+      "response_body": "{\"id\":117,\"title\":\"<script>alert('VoAPITestXSS')</script>\",\"comment\":\"VoAPI_XvkvvG\",\"content\":\"VoAPI_rjJteu\",\"user_agent\":\"testclient\",\"timestamp\":null}",
       "execution_trace": [
         {
           "role": "CANDIDATE_TARGET",
           "method": "POST",
           "path": "/api/v1/vault/audit/logs",
           "status": 200,
-          "latency_ms": 9.38,
+          "latency_ms": 8.77,
           "payload_injected": "<script>alert('VoAPITestXSS')</script>",
           "target_parameter": "title"
         },
         {
           "role": "TRIGGER",
           "method": "GET",
-          "path": "/api/v1/vault/audit/logs",
+          "path": "/api/v1/vault/audit/logs/view",
           "status": 200,
-          "latency_ms": 6.1
+          "latency_ms": 4.81
         }
       ]
     },
@@ -294,33 +355,39 @@
       "target_parameter": "name",
       "payload_used": "<script>alert('VoAPITestXSS')</script>",
       "status_code": 201,
-      "latency_ms": 11.88,
+      "latency_ms": 7.74,
       "verdict": "CONFIRMED_VULNERABILITY",
       "confidence": 1.0,
       "explanation": "XSS confirmed: unescaped executable script payload stored and reflected in markup.",
-      "response_preview": "{\"id\":\"4c968a7a\",\"name\":\"<script>alert('VoAPITestXSS')</script>\",\"description\":\"VoAPI_cQZaeF\",\"owner\":\"admin\"}",
+      "analysis": "XSS confirmed: unescaped executable script payload stored and reflected in markup.",
+      "evidence": [
+        "Oracle Verdict: CONFIRMED_VULNERABILITY (Confidence: 1.00)",
+        "XSS confirmed: unescaped executable script payload stored and reflected in markup."
+      ],
+      "response_preview": "{\"id\":\"d0ab7292\",\"name\":\"<script>alert('VoAPITestXSS')</script>\",\"description\":\"VoAPI_pyXAJp\",\"owner\":\"admin\"}",
+      "response_body": "{\"id\":\"d0ab7292\",\"name\":\"<script>alert('VoAPITestXSS')</script>\",\"description\":\"VoAPI_pyXAJp\",\"owner\":\"admin\"}",
       "execution_trace": [
         {
           "role": "CANDIDATE_TARGET",
           "method": "POST",
           "path": "/api/v1/vault/items",
           "status": 201,
-          "latency_ms": 11.88,
+          "latency_ms": 7.74,
           "payload_injected": "<script>alert('VoAPITestXSS')</script>",
           "target_parameter": "name"
         },
         {
           "role": "TRIGGER",
           "method": "GET",
-          "path": "/api/v1/vault/audit/logs",
+          "path": "/api/v1/vault/audit/logs/view",
           "status": 200,
-          "latency_ms": 8.04
+          "latency_ms": 4.42
         }
       ]
     },
     {
       "candidate": {
-        "path": "/api/v1/vault/items/{id}",
+        "path": "/api/v1/vault/items/1' OR '1'='1' -- ",
         "method": "GET",
         "cwe_id": "CWE-89",
         "vulnerability_type": "SQL Injection"
@@ -328,18 +395,21 @@
       "target_parameter": "id",
       "payload_used": "1' OR '1'='1' -- ",
       "status_code": 404,
-      "latency_ms": 5.45,
+      "latency_ms": 2.92,
       "verdict": "NEGATIVE",
       "confidence": 0.85,
       "explanation": "No SQL injection symptoms detected.",
+      "analysis": "No SQL injection symptoms detected.",
+      "evidence": [],
       "response_preview": "{\"detail\":\"Vault item with id '1' OR '1'='1' -- ' was not found\"}",
+      "response_body": "{\"detail\":\"Vault item with id '1' OR '1'='1' -- ' was not found\"}",
       "execution_trace": [
         {
           "role": "CANDIDATE_TARGET",
           "method": "GET",
           "path": "/api/v1/vault/items/1' OR '1'='1' -- ",
           "status": 404,
-          "latency_ms": 5.45,
+          "latency_ms": 2.92,
           "payload_injected": "1' OR '1'='1' -- ",
           "target_parameter": "id"
         }
@@ -347,7 +417,7 @@
     },
     {
       "candidate": {
-        "path": "/api/v1/vault/items/{id}",
+        "path": "/api/v1/vault/items/1' OR '1'='1' -- ",
         "method": "DELETE",
         "cwe_id": "CWE-89",
         "vulnerability_type": "SQL Injection"
@@ -355,18 +425,21 @@
       "target_parameter": "id",
       "payload_used": "1' OR '1'='1' -- ",
       "status_code": 404,
-      "latency_ms": 4.83,
+      "latency_ms": 2.8,
       "verdict": "NEGATIVE",
       "confidence": 0.85,
       "explanation": "No SQL injection symptoms detected.",
+      "analysis": "No SQL injection symptoms detected.",
+      "evidence": [],
       "response_preview": "{\"detail\":\"Vault item with id '1' OR '1'='1' -- ' does not exist\"}",
+      "response_body": "{\"detail\":\"Vault item with id '1' OR '1'='1' -- ' does not exist\"}",
       "execution_trace": [
         {
           "role": "CANDIDATE_TARGET",
           "method": "DELETE",
           "path": "/api/v1/vault/items/1' OR '1'='1' -- ",
           "status": 404,
-          "latency_ms": 4.83,
+          "latency_ms": 2.8,
           "payload_injected": "1' OR '1'='1' -- ",
           "target_parameter": "id"
         }

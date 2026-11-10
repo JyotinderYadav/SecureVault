@@ -110,7 +110,7 @@ class VulnerabilityOracle:
             eval_body = trigger_body if trigger_body else response_body
             if "<script>alert('voapitestxss')</script>" in eval_body.lower() or "<svg/onload=alert('voapitestxss')>" in eval_body.lower() or "<img src=x onerror=alert('voapitestxss')>" in eval_body.lower():
                 return "CONFIRMED_VULNERABILITY", "XSS confirmed: unescaped executable script payload stored and reflected in markup.", 1.0
-            if "&lt;script&gt;" in eval_body.lower() or "&lt;img" in eval_body.lower():
+            if "&lt;script&gt;" in eval_body.lower() or "&amp;lt;script&amp;gt;" in eval_body.lower() or "&lt;img" in eval_body.lower():
                 return "NEGATIVE", "Defended: HTML entities properly escaped and sanitized.", 0.95
             return "NEGATIVE", "Payload safely escaped or not reflected.", 0.85
 

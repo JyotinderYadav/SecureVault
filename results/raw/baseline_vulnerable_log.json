@@ -1,7 +1,7 @@
 {
   "strategy": "BASELINE_RANDOM_FUZZING",
   "total_requests": 48,
-  "total_time_ms": 411.62,
+  "total_time_ms": 318.24,
   "findings_count": 0,
   "findings": [],
   "execution_trace": [
@@ -9,337 +9,337 @@
       "method": "POST",
       "path": "/api/v1/auth/login",
       "status": 401,
-      "payload": "9999999999",
-      "latency_ms": 85.74
-    },
-    {
-      "method": "POST",
-      "path": "/api/v1/auth/login",
-      "status": 401,
-      "payload": "9999999999",
-      "latency_ms": 5.14
-    },
-    {
-      "method": "POST",
-      "path": "/api/v1/auth/login",
-      "status": 401,
-      "payload": "\"",
-      "latency_ms": 4.32
-    },
-    {
-      "method": "POST",
-      "path": "/api/v1/vault/sync",
-      "status": 400,
-      "payload": "'",
-      "latency_ms": 4.22
-    },
-    {
-      "method": "POST",
-      "path": "/api/v1/vault/sync",
-      "status": 400,
-      "payload": "0",
-      "latency_ms": 4.29
-    },
-    {
-      "method": "POST",
-      "path": "/api/v1/vault/sync",
-      "status": 400,
-      "payload": "9999999999",
-      "latency_ms": 4.69
-    },
-    {
-      "method": "POST",
-      "path": "/api/v1/vault/upload",
-      "status": 200,
-      "payload": "true",
-      "latency_ms": 5.06
-    },
-    {
-      "method": "POST",
-      "path": "/api/v1/vault/upload",
-      "status": 200,
-      "payload": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-      "latency_ms": 3.59
-    },
-    {
-      "method": "POST",
-      "path": "/api/v1/vault/upload",
-      "status": 200,
-      "payload": "'",
-      "latency_ms": 4.47
-    },
-    {
-      "method": "GET",
-      "path": "/api/v1/vault/files/read",
-      "status": 404,
-      "payload": "'",
-      "latency_ms": 6.32
-    },
-    {
-      "method": "GET",
-      "path": "/api/v1/vault/files/read",
-      "status": 404,
-      "payload": "'",
-      "latency_ms": 3.76
-    },
-    {
-      "method": "GET",
-      "path": "/api/v1/vault/files/read",
-      "status": 404,
-      "payload": "true",
-      "latency_ms": 3.98
-    },
-    {
-      "method": "POST",
-      "path": "/api/v1/vault/tools/ping-backup",
-      "status": 200,
-      "payload": "\"",
-      "latency_ms": 34.28
-    },
-    {
-      "method": "POST",
-      "path": "/api/v1/vault/tools/ping-backup",
-      "status": 200,
-      "payload": "0",
-      "latency_ms": 30.57
-    },
-    {
-      "method": "POST",
-      "path": "/api/v1/vault/tools/ping-backup",
-      "status": 200,
-      "payload": "../../",
-      "latency_ms": 38.42
-    },
-    {
-      "method": "GET",
-      "path": "/api/v1/vault/records/search",
-      "status": 200,
       "payload": "NaN",
-      "latency_ms": 5.87
+      "latency_ms": 61.2
     },
     {
-      "method": "GET",
-      "path": "/api/v1/vault/records/search",
-      "status": 200,
+      "method": "POST",
+      "path": "/api/v1/auth/login",
+      "status": 401,
       "payload": "null",
-      "latency_ms": 3.95
+      "latency_ms": 3.28
     },
     {
-      "method": "GET",
-      "path": "/api/v1/vault/records/search",
+      "method": "POST",
+      "path": "/api/v1/auth/login",
+      "status": 401,
+      "payload": "undefined",
+      "latency_ms": 2.75
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/vault/sync",
+      "status": 400,
+      "payload": "true",
+      "latency_ms": 3.07
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/vault/sync",
+      "status": 400,
+      "payload": "'",
+      "latency_ms": 2.8
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/vault/sync",
+      "status": 400,
+      "payload": "%s%p%x%d",
+      "latency_ms": 2.32
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/vault/upload",
       "status": 200,
       "payload": "<tag>",
-      "latency_ms": 4.25
+      "latency_ms": 3.5
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/vault/upload",
+      "status": 200,
+      "payload": "%s%p%x%d",
+      "latency_ms": 2.66
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/vault/upload",
+      "status": 200,
+      "payload": "9999999999",
+      "latency_ms": 2.59
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/vault/files/read",
+      "status": 404,
+      "payload": "",
+      "latency_ms": 3.51
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/vault/files/read",
+      "status": 404,
+      "payload": "undefined",
+      "latency_ms": 2.74
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/vault/files/read",
+      "status": 404,
+      "payload": "http://example.com",
+      "latency_ms": 3.2
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/vault/tools/ping-backup",
+      "status": 200,
+      "payload": "",
+      "latency_ms": 30.52
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/vault/tools/ping-backup",
+      "status": 200,
+      "payload": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+      "latency_ms": 29.47
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/vault/tools/ping-backup",
+      "status": 200,
+      "payload": "-1",
+      "latency_ms": 30.32
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/vault/records/search",
+      "status": 200,
+      "payload": "null",
+      "latency_ms": 3.99
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/vault/records/search",
+      "status": 200,
+      "payload": "NaN",
+      "latency_ms": 3.15
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/vault/records/search",
+      "status": 200,
+      "payload": "false",
+      "latency_ms": 2.95
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/vault/audit/logs",
+      "status": 200,
+      "payload": "<tag>",
+      "latency_ms": 3.52
     },
     {
       "method": "GET",
       "path": "/api/v1/vault/audit/logs",
       "status": 200,
       "payload": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-      "latency_ms": 5.54
+      "latency_ms": 2.98
     },
     {
       "method": "GET",
       "path": "/api/v1/vault/audit/logs",
       "status": 200,
-      "payload": "'",
-      "latency_ms": 4.24
-    },
-    {
-      "method": "GET",
-      "path": "/api/v1/vault/audit/logs",
-      "status": 200,
-      "payload": "../../",
-      "latency_ms": 4.22
+      "payload": "",
+      "latency_ms": 3.03
     },
     {
       "method": "POST",
       "path": "/api/v1/vault/audit/logs",
       "status": 200,
-      "payload": "null",
-      "latency_ms": 9.58
+      "payload": "false",
+      "latency_ms": 7.58
     },
     {
       "method": "POST",
       "path": "/api/v1/vault/audit/logs",
       "status": 200,
-      "payload": "NaN",
-      "latency_ms": 10.09
+      "payload": "-1",
+      "latency_ms": 8.48
     },
     {
       "method": "POST",
       "path": "/api/v1/vault/audit/logs",
       "status": 200,
-      "payload": "undefined",
-      "latency_ms": 11.11
+      "payload": "0",
+      "latency_ms": 8.86
     },
     {
       "method": "GET",
       "path": "/api/v1/vault/audit/logs/view",
       "status": 200,
-      "payload": "9999999999",
-      "latency_ms": 6.63
+      "payload": "undefined",
+      "latency_ms": 4.48
     },
     {
       "method": "GET",
       "path": "/api/v1/vault/audit/logs/view",
       "status": 200,
       "payload": "false",
-      "latency_ms": 4.56
+      "latency_ms": 2.93
     },
     {
       "method": "GET",
       "path": "/api/v1/vault/audit/logs/view",
       "status": 200,
-      "payload": "%s%p%x%d",
-      "latency_ms": 3.73
+      "payload": "http://example.com",
+      "latency_ms": 2.66
     },
     {
       "method": "POST",
       "path": "/api/v1/vault/items",
       "status": 201,
-      "payload": "%s%p%x%d",
-      "latency_ms": 9.71
+      "payload": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+      "latency_ms": 7.63
     },
     {
       "method": "POST",
       "path": "/api/v1/vault/items",
       "status": 201,
-      "payload": "undefined",
-      "latency_ms": 9.68
+      "payload": "<tag>",
+      "latency_ms": 8.71
     },
     {
       "method": "POST",
       "path": "/api/v1/vault/items",
       "status": 201,
-      "payload": "NaN",
-      "latency_ms": 10.4
+      "payload": "<tag>",
+      "latency_ms": 8.36
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/vault/items/null",
+      "status": 404,
+      "payload": "null",
+      "latency_ms": 5.96
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/vault/items/../../",
+      "status": 404,
+      "payload": "../../",
+      "latency_ms": 2.57
     },
     {
       "method": "GET",
       "path": "/api/v1/vault/items/9999999999",
       "status": 404,
       "payload": "9999999999",
-      "latency_ms": 5.25
+      "latency_ms": 2.86
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/v1/vault/items/true",
+      "status": 404,
+      "payload": "true",
+      "latency_ms": 3.89
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/v1/vault/items/true",
+      "status": 404,
+      "payload": "true",
+      "latency_ms": 2.91
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/v1/vault/items/true",
+      "status": 404,
+      "payload": "true",
+      "latency_ms": 3.19
     },
     {
       "method": "GET",
-      "path": "/api/v1/vault/items/<tag>",
-      "status": 404,
-      "payload": "<tag>",
-      "latency_ms": 4.09
+      "path": "/api/v1/health",
+      "status": 200,
+      "payload": "true",
+      "latency_ms": 3.04
     },
     {
       "method": "GET",
-      "path": "/api/v1/vault/items/false",
-      "status": 404,
+      "path": "/api/v1/health",
+      "status": 200,
+      "payload": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+      "latency_ms": 2.4
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/health",
+      "status": 200,
+      "payload": "NaN",
+      "latency_ms": 2.87
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/internal/health",
+      "status": 200,
       "payload": "false",
-      "latency_ms": 4.66
+      "latency_ms": 2.88
     },
     {
-      "method": "DELETE",
-      "path": "/api/v1/vault/items/0",
-      "status": 404,
-      "payload": "0",
-      "latency_ms": 4.08
+      "method": "GET",
+      "path": "/api/v1/internal/health",
+      "status": 200,
+      "payload": "\"",
+      "latency_ms": 2.33
     },
     {
-      "method": "DELETE",
-      "path": "/api/v1/vault/items/<tag>",
-      "status": 404,
+      "method": "GET",
+      "path": "/api/v1/internal/health",
+      "status": 200,
+      "payload": "9999999999",
+      "latency_ms": 2.27
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/system/mode",
+      "status": 200,
+      "payload": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+      "latency_ms": 2.75
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/system/mode",
+      "status": 200,
+      "payload": "NaN",
+      "latency_ms": 2.42
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/system/mode",
+      "status": 200,
       "payload": "<tag>",
-      "latency_ms": 3.94
+      "latency_ms": 2.47
     },
     {
-      "method": "DELETE",
-      "path": "/api/v1/vault/items/'",
-      "status": 404,
-      "payload": "'",
-      "latency_ms": 4.8
-    },
-    {
-      "method": "GET",
-      "path": "/api/v1/health",
-      "status": 200,
-      "payload": "NaN",
-      "latency_ms": 4.51
-    },
-    {
-      "method": "GET",
-      "path": "/api/v1/health",
-      "status": 200,
-      "payload": "NaN",
-      "latency_ms": 3.09
-    },
-    {
-      "method": "GET",
-      "path": "/api/v1/health",
-      "status": 200,
-      "payload": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-      "latency_ms": 2.99
-    },
-    {
-      "method": "GET",
-      "path": "/api/v1/internal/health",
-      "status": 200,
-      "payload": "null",
-      "latency_ms": 3.21
-    },
-    {
-      "method": "GET",
-      "path": "/api/v1/internal/health",
-      "status": 200,
-      "payload": "null",
-      "latency_ms": 3.4
-    },
-    {
-      "method": "GET",
-      "path": "/api/v1/internal/health",
-      "status": 200,
-      "payload": "9999999999",
-      "latency_ms": 3.79
-    },
-    {
-      "method": "GET",
+      "method": "POST",
       "path": "/api/v1/system/mode",
-      "status": 200,
+      "status": 400,
       "payload": "../../",
-      "latency_ms": 3.36
-    },
-    {
-      "method": "GET",
-      "path": "/api/v1/system/mode",
-      "status": 200,
-      "payload": "%s%p%x%d",
-      "latency_ms": 3.87
-    },
-    {
-      "method": "GET",
-      "path": "/api/v1/system/mode",
-      "status": 200,
-      "payload": "9999999999",
-      "latency_ms": 3.65
+      "latency_ms": 4.78
     },
     {
       "method": "POST",
       "path": "/api/v1/system/mode",
       "status": 400,
-      "payload": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-      "latency_ms": 4.28
+      "payload": "false",
+      "latency_ms": 2.59
     },
     {
       "method": "POST",
       "path": "/api/v1/system/mode",
       "status": 400,
-      "payload": "http://example.com",
-      "latency_ms": 3.22
-    },
-    {
-      "method": "POST",
-      "path": "/api/v1/system/mode",
-      "status": 400,
-      "payload": "9999999999",
-      "latency_ms": 3.02
+      "payload": "null",
+      "latency_ms": 2.84
     }
   ]
 }

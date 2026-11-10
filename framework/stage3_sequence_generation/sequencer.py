@@ -11,6 +11,7 @@ import re
 import string
 import uuid
 from typing import Dict, List, Any, Optional, Tuple, Set
+from framework.stage1_spec_analysis.parser import EndpointSchema
 
 PRODUCER_METHOD_PRIORITY = {
     "POST": 4,
@@ -30,23 +31,115 @@ FORMAT_PRESETS = {
     "datetime": "2026-11-10T12:00:00Z"
 }
 
+
+class TestSequenceStep(dict):
+    """
+    Dual representation of a sequence step.
+    Supports both dictionary indexing (step["method"], step["path"])
+    and attribute access (step.endpoint.method, step.parameter_strategies).
+    """
+    def __init__(
+        self,
+        endpoint: Any,
+        parameters: Optional[Dict[str, Any]] = None,
+        parameter_strategies: Optional[Dict[str, str]] = None,
+        request_body: Optional[Any] = None,
+        producers: Optional[List[str]] = None
+    ):
+        path = endpoint.path if hasattr(endpoint, "path") else endpoint["path"]
+        method = endpoint.method if hasattr(endpoint, "method") else endpoint["method"]
+        op_id = endpoint.operation_id if hasattr(endpoint, "operation_id") else endpoint.get("operation_id", "")
+        summary = endpoint.summary if hasattr(endpoint, "summary") else endpoint.get("summary", "")
+        ep_params = endpoint.parameters if hasattr(endpoint, "parameters") else endpoint.get("parameters", [])
+
+        data = {
+            "path": path,
+            "method": method,
+            "operation_id": op_id,
+            "summary": summary,
+            "parameters": parameters or {},
+            "parameter_strategies": parameter_strategies or {},
+            "request_body": request_body,
+            "producers": producers or []
+        }
+        super().__init__(data)
+        self._data = data
+        if isinstance(endpoint, EndpointSchema):
+            self._endpoint = endpoint
+        else:
+            self._endpoint = EndpointSchema(
+                path=path,
+                method=method,
+                parameters=ep_params,
+                operation_id=op_id,
+                summary=summary
+            )
+        self._parameters = parameters or {}
+        self._parameter_strategies = parameter_strategies or {}
+        self._request_body = request_body
+        self._producers = producers or []
+
+    @property
+    def endpoint(self) -> EndpointSchema:
+        return self._endpoint
+
+    @property
+    def method(self) -> str:
+        return self._data["method"]
+
+    @property
+    def path(self) -> str:
+        return self._data["path"]
+
+    @property
+    def parameters(self) -> Dict[str, Any]:
+        return self._parameters
+
+    @property
+    def parameter_strategies(self) -> Dict[str, str]:
+        return self._parameter_strategies
+
+    @property
+    def request_body(self) -> Optional[Any]:
+        return self._request_body
+
+    @property
+    def producers(self) -> List[str]:
+        return self._producers
+
+
+class TestSequence(list):
+    """
+    List of TestSequenceSteps representing a synthesized execution sequence.
+    Exposes .steps property for UI view compatibility while remaining directly iterable/indexable.
+    """
+    def __init__(self, steps: List[TestSequenceStep]):
+        super().__init__(steps)
+
+    @property
+    def steps(self) -> List[TestSequenceStep]:
+        return list(self)
+
+
 class TestSequenceGenerator:
     __test__ = False
 
-    def __init__(self, endpoints: List[Dict[str, Any]]):
+    def __init__(self, endpoints: List[Any]):
         self.endpoints = endpoints
-        self.endpoint_map: Dict[Tuple[str, str], Dict[str, Any]] = {
-            (ep["method"].upper(), ep["path"]): ep for ep in endpoints
-        }
+        self.endpoint_map: Dict[Tuple[str, str], Any] = {}
+        for ep in endpoints:
+            m = ep.method.upper() if hasattr(ep, "method") else ep["method"].upper()
+            p = ep.path if hasattr(ep, "path") else ep["path"]
+            self.endpoint_map[(m, p)] = ep
+
         self.successful_values: Dict[str, Any] = {}
 
     def _get_resource_base(self, path: str) -> str:
         """Strips path parameters to obtain canonical resource parent path."""
-        # e.g., /api/v1/vault/items/{id} -> /api/v1/vault/items
         clean = re.sub(r"/\{[^}]+\}", "", path).rstrip("/")
         return clean
 
-    def _find_producers_for_param(self, param_name: str, consumer_path: str) -> List[Dict[str, Any]]:
+    def _find_producers_for_param(self, param_name: str, consumer_path: str) -> List[Any]:
         """
         Searches endpoints whose responses produce param_name,
         strictly respecting Resource Hierarchy and Producer Priority.
@@ -61,19 +154,20 @@ class TestSequenceGenerator:
             producer_base = self._get_resource_base(p)
 
             # Resource Hierarchy constraint (Section 3.3.1):
-            # Producer must share the same direct resource base or be an ancestor
             if producer_base != consumer_base and not consumer_base.startswith(producer_base):
                 continue
 
-            # Check if response properties explicitly produce param_name
-            responses = ep.get("responses", {})
+            responses = ep.responses if hasattr(ep, "responses") else ep.get("responses", {})
             matches = False
-            for code, r_meta in responses.items():
-                if str(code).startswith("2"):
-                    props = [prop.lower() for prop in r_meta.get("properties", [])]
-                    if param_name.lower() in props:
-                        matches = True
-                        break
+            if isinstance(responses, dict):
+                for code, r_meta in responses.items():
+                    if str(code).startswith("2"):
+                        props = []
+                        if isinstance(r_meta, dict):
+                            props = [prop.lower() for prop in r_meta.get("properties", [])]
+                        if param_name.lower() in props:
+                            matches = True
+                            break
 
             # Fallback heuristic: POST on parent resource base produces sub-resource identifier
             if not matches and m == "POST" and producer_base == consumer_base:
@@ -84,51 +178,104 @@ class TestSequenceGenerator:
                 producers.append(ep)
 
         # Apply Priority Rule: POST > PUT > GET > PATCH
-        producers.sort(key=lambda x: PRODUCER_METHOD_PRIORITY.get(x["method"], 0), reverse=True)
+        producers.sort(
+            key=lambda x: PRODUCER_METHOD_PRIORITY.get(
+                x.method if hasattr(x, "method") else x["method"], 0
+            ),
+            reverse=True
+        )
         return producers
 
-    def generate_sequence(self, candidate_api: Dict[str, Any]) -> List[Dict[str, Any]]:
+    def generate_sequence(self, candidate_api: Any) -> TestSequence:
         """
         Algorithm 1: Reverse Sequence Construction.
         Builds a stateful dependency chain prefix for the candidate endpoint.
+        Returns a TestSequence instance containing TestSequenceStep items.
         """
-        sequence: List[Dict[str, Any]] = [candidate_api]
-        visited_keys: Set[Tuple[str, str]] = {(candidate_api["method"], candidate_api["path"])}
+        raw_ops: List[Any] = [candidate_api]
+        
+        cand_m = candidate_api.method if hasattr(candidate_api, "method") else candidate_api["method"]
+        cand_p = candidate_api.path if hasattr(candidate_api, "path") else candidate_api["path"]
+        visited_keys: Set[Tuple[str, str]] = {(cand_m, cand_p)}
+        
         i = -1
-
         max_depth = 5
         depth = 0
 
         while depth < max_depth:
             depth += 1
-            curr_op = sequence[i]
-            params = curr_op.get("parameters", [])
+            curr_op = raw_ops[i]
+            curr_path = curr_op.path if hasattr(curr_op, "path") else curr_op["path"]
+            params = curr_op.parameters if hasattr(curr_op, "parameters") else curr_op.get("parameters", [])
 
-            needed_params = [
-                p["name"] for p in params
-                if p.get("in") == "path" or p.get("required") is True
-            ]
+            needed_params = []
+            for p in params:
+                p_name = p.name if hasattr(p, "name") else p.get("name")
+                p_in = p.location if hasattr(p, "location") else p.get("in")
+                p_req = p.required if hasattr(p, "required") else p.get("required")
+                if p_in == "path" or p_req is True:
+                    if p_name:
+                        needed_params.append(p_name)
 
             found_new_producer = False
             for p_name in needed_params:
-                producers = self._find_producers_for_param(p_name, curr_op["path"])
+                producers = self._find_producers_for_param(p_name, curr_path)
                 for prod in producers:
-                    prod_key = (prod["method"], prod["path"])
+                    prod_m = prod.method if hasattr(prod, "method") else prod["method"]
+                    prod_p = prod.path if hasattr(prod, "path") else prod["path"]
+                    prod_key = (prod_m, prod_p)
                     if prod_key not in visited_keys:
                         visited_keys.add(prod_key)
-                        sequence.insert(0, prod)
+                        raw_ops.insert(0, prod)
                         found_new_producer = True
                         break
 
             if not found_new_producer:
                 break
 
-            if sequence[i] == sequence[0]:
+            if raw_ops[i] == raw_ops[0]:
                 break
             else:
                 i = i - 1
 
-        return sequence
+        # Synthesize sequence steps with parameter values & strategies
+        steps: List[TestSequenceStep] = []
+        context_producers: List[str] = []
+
+        for op in raw_ops:
+            op_m = op.method if hasattr(op, "method") else op["method"]
+            op_p = op.path if hasattr(op, "path") else op["path"]
+            op_params = op.parameters if hasattr(op, "parameters") else op.get("parameters", [])
+
+            step_param_values: Dict[str, Any] = {}
+            step_param_strats: Dict[str, str] = {}
+
+            for p in op_params:
+                p_meta = p.to_dict() if hasattr(p, "to_dict") else (p if isinstance(p, dict) else {
+                    "name": getattr(p, "name", ""),
+                    "in": getattr(p, "location", "query"),
+                    "type": getattr(p, "param_type", "string")
+                })
+                p_name = p_meta.get("name", "")
+                val, strat = self.generate_parameter_value(p_meta)
+                step_param_values[p_name] = val
+                step_param_strats[p_name] = strat
+
+            body_content = None
+            if op_m in ("POST", "PUT", "PATCH"):
+                body_content = {"name": "VoAPI_Seed_Entity", "description": "Automated State Seed"}
+
+            step = TestSequenceStep(
+                endpoint=op,
+                parameters=step_param_values,
+                parameter_strategies=step_param_strats,
+                request_body=body_content,
+                producers=list(context_producers)
+            )
+            steps.append(step)
+            context_producers.append(f"{op_m} {op_p}")
+
+        return TestSequence(steps)
 
     def generate_parameter_value(
         self,

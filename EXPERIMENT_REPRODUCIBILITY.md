@@ -118,3 +118,4 @@ Navigate to `http://127.0.0.1:8000/docs` to inspect interactive Swagger UI docum
 - **Candidate Interface Weights:** $w_{path} = 1.0$, $w_{param} = 2.0$ (configured in `framework/stage2_candidate_extraction/extractor.py`).
 - **Algorithm 1 Max Search Depth:** 5 (configured in `framework/stage3_sequence_generation/sequencer.py`).
 - **JWT Signing Algorithm:** HS256 (configured in `config/settings.py`).
+

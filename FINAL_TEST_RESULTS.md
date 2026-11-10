@@ -120,3 +120,4 @@ A fresh Python session verified:
 - `system_config.toggle_mode() == 'HARDENED'` (True)
 - `system_config.is_hardened() == True` (True)
 - Streamlit application `ui/app.py` imports and initializes with zero errors.
+

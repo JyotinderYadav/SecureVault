@@ -1,0 +1,1207 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "SecureVault REST API",
+    "description": "Dual-Mode (Vulnerable vs. Hardened) Cloud Vault Testbed for VOAPI\u00b2 Security Testing",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/api/v1/auth/login": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "User Authentication",
+        "description": "Authenticate user and generate access token.\nDefault admin credentials: admin / adminpass123",
+        "operationId": "login_api_v1_auth_login_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/vault/sync": {
+      "post": {
+        "tags": [
+          "SSRF Simulation (CWE-918)"
+        ],
+        "summary": "Synchronize Remote Vault (CWE-918 Target)",
+        "description": "Fetch data from remote vault endpoint to synchronize configurations.\n- VULNERABLE mode: Directly fetches the target URL without validating destination IP (enables SSRF).\n- HARDENED mode: Resolves host, blocks loopback, private ranges, and cloud metadata endpoints.",
+        "operationId": "sync_remote_vault_api_v1_vault_sync_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SyncRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SyncResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/vault/upload": {
+      "post": {
+        "tags": [
+          "Unrestricted File Upload (CWE-434)"
+        ],
+        "summary": "Upload Vault Asset (CWE-434 Target)",
+        "description": "Store files in the vault storage directory.\n- VULNERABLE mode: Preserves client filename and allows arbitrary extensions (enables CWE-434).\n- HARDENED mode: Whitelists extensions, rejects scripts/binaries, and randomizes filenames.",
+        "operationId": "upload_vault_file_api_v1_vault_upload_post",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_upload_vault_file_api_v1_vault_upload_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UploadResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/vault/files/read": {
+      "get": {
+        "tags": [
+          "Path Traversal (CWE-22)"
+        ],
+        "summary": "Read Stored File (CWE-22 Target)",
+        "description": "Read content of a file from vault storage.\n- VULNERABLE mode: Unsanitized path concatenation allows '../' traversal outside upload root.\n- HARDENED mode: Resolves canonical path and verifies it remains strictly within STORAGE_DIR.",
+        "operationId": "read_vault_file_api_v1_vault_files_read_get",
+        "parameters": [
+          {
+            "name": "filename",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Target filename or relative path",
+              "examples": [
+                "sample.txt"
+              ],
+              "title": "Filename"
+            },
+            "description": "Target filename or relative path"
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "File category in vault",
+              "default": "documents",
+              "title": "Category"
+            },
+            "description": "File category in vault"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FileReadResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/vault/tools/ping-backup": {
+      "post": {
+        "tags": [
+          "Command Injection (CWE-78)"
+        ],
+        "summary": "Ping Backup Node (CWE-78 Target)",
+        "description": "Test network latency and reachability of a remote vault backup node.\n- VULNERABLE mode: Concatenates input into shell string with shell=True (enables CWE-78).\n- HARDENED mode: Validates host format and invokes command directly with shell=False.",
+        "operationId": "ping_backup_node_api_v1_vault_tools_ping_backup_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PingBackupRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PingBackupResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/vault/records/search": {
+      "get": {
+        "tags": [
+          "SQL Injection (CWE-89)"
+        ],
+        "summary": "Search Vault Records (CWE-89 Target)",
+        "description": "Search and filter confidential records in the vault database.\n- VULNERABLE mode: Concatenates user input directly into SQL statement (enables CWE-89).\n- HARDENED mode: Executes parameterized prepared statements with bounded variables.",
+        "operationId": "search_records_api_v1_vault_records_search_get",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Search term for vault record title",
+              "examples": [
+                "Cloud"
+              ],
+              "title": "Query"
+            },
+            "description": "Search term for vault record title"
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Optional category filter",
+              "examples": [
+                "Infrastructure"
+              ],
+              "title": "Category"
+            },
+            "description": "Optional category filter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecordSearchResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/vault/audit/logs": {
+      "get": {
+        "tags": [
+          "Cross-Site Scripting (CWE-79)"
+        ],
+        "summary": "Retrieve Audit Logs JSON (CWE-79 Target)",
+        "description": "List all stored audit log entries in JSON format.",
+        "operationId": "list_audit_logs_api_v1_vault_audit_logs_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditLogResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Cross-Site Scripting (CWE-79)"
+        ],
+        "summary": "Create Audit Log Entry (CWE-79 Sink)",
+        "description": "Log an administrative audit action.\n- VULNERABLE mode: Stores user payload unescaped and unsanitized.\n- HARDENED mode: Sanitizes and escapes HTML entities before storing.",
+        "operationId": "create_audit_log_api_v1_vault_audit_logs_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuditLogCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditLogItem"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/vault/audit/logs/view": {
+      "get": {
+        "tags": [
+          "Cross-Site Scripting (CWE-79)"
+        ],
+        "summary": "Render HTML Audit View (Stored XSS Trigger)",
+        "description": "Render a server-side HTML administrative dashboard.\n- VULNERABLE mode: Directly concatenates raw content strings into HTML document.\n- HARDENED mode: Strictly escapes all user-supplied text nodes.",
+        "operationId": "view_audit_logs_html_api_v1_vault_audit_logs_view_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/vault/items": {
+      "post": {
+        "tags": [
+          "Stateful CRUD Items (Producer-Consumer)"
+        ],
+        "summary": "Create Vault Item (Producer)",
+        "description": "Creates a new secure vault item.\nActs as a Producer API in VOAPI\u00b2 Stage 3: its response produces the 'id' parameter.",
+        "operationId": "create_vault_item_api_v1_vault_items_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VaultItemCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VaultItemResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/vault/items/{id}": {
+      "get": {
+        "tags": [
+          "Stateful CRUD Items (Producer-Consumer)"
+        ],
+        "summary": "Get Vault Item (Consumer)",
+        "description": "Retrieves a vault item by its unique identifier.\nActs as a Consumer API in VOAPI\u00b2 Stage 3: requires 'id' produced by the POST endpoint.",
+        "operationId": "get_vault_item_api_v1_vault_items__id__get",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VaultItemResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Stateful CRUD Items (Producer-Consumer)"
+        ],
+        "summary": "Delete Vault Item (CRUD Terminator)",
+        "description": "Deletes a vault item.\nSubject to CRUD semantic constraints in Stage 3 (cannot access resource after deletion).",
+        "operationId": "delete_vault_item_api_v1_vault_items__id__delete",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/health": {
+      "get": {
+        "tags": [
+          "Health & Diagnostics"
+        ],
+        "summary": "Public Service Health",
+        "description": "Returns general service health status.",
+        "operationId": "public_health_api_v1_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/internal/health": {
+      "get": {
+        "tags": [
+          "Health & Diagnostics"
+        ],
+        "summary": "Simulated Internal Health (SSRF Target)",
+        "description": "Simulated internal microservice.\nIn real cloud architectures, this represents an unauthenticated loopback or link-local service.\nTarget for CWE-918 (SSRF).",
+        "operationId": "internal_health_api_v1_internal_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/system/mode": {
+      "get": {
+        "tags": [
+          "Security Configuration"
+        ],
+        "summary": "Get Active Security Mode",
+        "description": "Check whether the API is currently in 'VULNERABLE' or 'HARDENED' mode.",
+        "operationId": "get_security_mode_api_v1_system_mode_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModeResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Security Configuration"
+        ],
+        "summary": "Toggle Security Mode",
+        "description": "Dynamically switch security mode between 'VULNERABLE' and 'HARDENED'.\nEnables instant before-and-after demonstration of attack mitigation.",
+        "operationId": "set_security_mode_api_v1_system_mode_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ModeToggleRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModeResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AuditLogCreate": {
+        "properties": {
+          "title": {
+            "type": "string",
+            "title": "Title",
+            "example": "Security Review"
+          },
+          "comment": {
+            "type": "string",
+            "title": "Comment",
+            "example": "Routine audit log entry"
+          },
+          "content": {
+            "type": "string",
+            "title": "Content",
+            "example": "<script>alert('XSS')</script>"
+          }
+        },
+        "type": "object",
+        "required": [
+          "title",
+          "comment",
+          "content"
+        ],
+        "title": "AuditLogCreate"
+      },
+      "AuditLogItem": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "comment": {
+            "type": "string",
+            "title": "Comment"
+          },
+          "content": {
+            "type": "string",
+            "title": "Content"
+          },
+          "user_agent": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "User Agent"
+          },
+          "timestamp": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Timestamp"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "comment",
+          "content"
+        ],
+        "title": "AuditLogItem"
+      },
+      "AuditLogResponse": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "total_logs": {
+            "type": "integer",
+            "title": "Total Logs"
+          },
+          "logs": {
+            "items": {
+              "$ref": "#/components/schemas/AuditLogItem"
+            },
+            "type": "array",
+            "title": "Logs"
+          }
+        },
+        "type": "object",
+        "required": [
+          "status",
+          "total_logs",
+          "logs"
+        ],
+        "title": "AuditLogResponse"
+      },
+      "Body_upload_vault_file_api_v1_vault_upload_post": {
+        "properties": {
+          "file": {
+            "type": "string",
+            "contentMediaType": "application/octet-stream",
+            "title": "File",
+            "description": "File to store in vault storage"
+          }
+        },
+        "type": "object",
+        "required": [
+          "file"
+        ],
+        "title": "Body_upload_vault_file_api_v1_vault_upload_post"
+      },
+      "FileReadResponse": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "requested_path": {
+            "type": "string",
+            "title": "Requested Path"
+          },
+          "resolved_path": {
+            "type": "string",
+            "title": "Resolved Path"
+          },
+          "content": {
+            "type": "string",
+            "title": "Content"
+          },
+          "size_bytes": {
+            "type": "integer",
+            "title": "Size Bytes"
+          }
+        },
+        "type": "object",
+        "required": [
+          "status",
+          "requested_path",
+          "resolved_path",
+          "content",
+          "size_bytes"
+        ],
+        "title": "FileReadResponse"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "LoginRequest": {
+        "properties": {
+          "username": {
+            "type": "string",
+            "title": "Username",
+            "example": "admin"
+          },
+          "password": {
+            "type": "string",
+            "title": "Password",
+            "example": "adminpass123"
+          }
+        },
+        "type": "object",
+        "required": [
+          "username",
+          "password"
+        ],
+        "title": "LoginRequest"
+      },
+      "ModeResponse": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "active_mode": {
+            "type": "string",
+            "title": "Active Mode"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          }
+        },
+        "type": "object",
+        "required": [
+          "status",
+          "active_mode",
+          "message"
+        ],
+        "title": "ModeResponse"
+      },
+      "ModeToggleRequest": {
+        "properties": {
+          "mode": {
+            "type": "string",
+            "title": "Mode",
+            "description": "'VULNERABLE' or 'HARDENED'",
+            "example": "HARDENED"
+          }
+        },
+        "type": "object",
+        "required": [
+          "mode"
+        ],
+        "title": "ModeToggleRequest"
+      },
+      "PingBackupRequest": {
+        "properties": {
+          "host": {
+            "type": "string",
+            "title": "Host",
+            "description": "Hostname or IP address to verify backup synchronization",
+            "example": "127.0.0.1"
+          },
+          "cmd": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cmd",
+            "description": "Optional diagnostic shell command",
+            "example": "echo VoAPICmdTest"
+          }
+        },
+        "type": "object",
+        "required": [
+          "host"
+        ],
+        "title": "PingBackupRequest"
+      },
+      "PingBackupResponse": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "target_host": {
+            "type": "string",
+            "title": "Target Host"
+          },
+          "command_executed": {
+            "type": "string",
+            "title": "Command Executed"
+          },
+          "output": {
+            "type": "string",
+            "title": "Output"
+          },
+          "exit_code": {
+            "type": "integer",
+            "title": "Exit Code"
+          }
+        },
+        "type": "object",
+        "required": [
+          "status",
+          "target_host",
+          "command_executed",
+          "output",
+          "exit_code"
+        ],
+        "title": "PingBackupResponse"
+      },
+      "RecordItem": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "category": {
+            "type": "string",
+            "title": "Category"
+          },
+          "secret_data": {
+            "type": "string",
+            "title": "Secret Data"
+          },
+          "created_by": {
+            "type": "string",
+            "title": "Created By"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "category",
+          "secret_data",
+          "created_by"
+        ],
+        "title": "RecordItem"
+      },
+      "RecordSearchResponse": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "query_executed": {
+            "type": "string",
+            "title": "Query Executed"
+          },
+          "count": {
+            "type": "integer",
+            "title": "Count"
+          },
+          "records": {
+            "items": {
+              "$ref": "#/components/schemas/RecordItem"
+            },
+            "type": "array",
+            "title": "Records"
+          }
+        },
+        "type": "object",
+        "required": [
+          "status",
+          "query_executed",
+          "count",
+          "records"
+        ],
+        "title": "RecordSearchResponse"
+      },
+      "SyncRequest": {
+        "properties": {
+          "url": {
+            "type": "string",
+            "title": "Url",
+            "description": "Target URL for remote vault synchronization",
+            "example": "http://127.0.0.1:8000/api/v1/internal/health"
+          },
+          "remote_host": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Remote Host",
+            "description": "Remote host identifier or proxy destination",
+            "example": "localhost"
+          },
+          "timeout": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Timeout",
+            "description": "Timeout in seconds",
+            "default": 5
+          }
+        },
+        "type": "object",
+        "required": [
+          "url"
+        ],
+        "title": "SyncRequest"
+      },
+      "SyncResponse": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "target_url": {
+            "type": "string",
+            "title": "Target Url"
+          },
+          "fetched_bytes": {
+            "type": "integer",
+            "title": "Fetched Bytes"
+          },
+          "content_preview": {
+            "type": "string",
+            "title": "Content Preview"
+          },
+          "cwe_detected": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cwe Detected"
+          }
+        },
+        "type": "object",
+        "required": [
+          "status",
+          "target_url",
+          "fetched_bytes",
+          "content_preview"
+        ],
+        "title": "SyncResponse"
+      },
+      "TokenResponse": {
+        "properties": {
+          "access_token": {
+            "type": "string",
+            "title": "Access Token"
+          },
+          "token_type": {
+            "type": "string",
+            "title": "Token Type",
+            "default": "bearer"
+          },
+          "role": {
+            "type": "string",
+            "title": "Role"
+          }
+        },
+        "type": "object",
+        "required": [
+          "access_token",
+          "role"
+        ],
+        "title": "TokenResponse"
+      },
+      "UploadResponse": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "filename": {
+            "type": "string",
+            "title": "Filename"
+          },
+          "saved_path": {
+            "type": "string",
+            "title": "Saved Path"
+          },
+          "content_type": {
+            "type": "string",
+            "title": "Content Type"
+          },
+          "size_bytes": {
+            "type": "integer",
+            "title": "Size Bytes"
+          },
+          "is_executable": {
+            "type": "boolean",
+            "title": "Is Executable"
+          },
+          "warning": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Warning"
+          }
+        },
+        "type": "object",
+        "required": [
+          "status",
+          "filename",
+          "saved_path",
+          "content_type",
+          "size_bytes",
+          "is_executable"
+        ],
+        "title": "UploadResponse"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      },
+      "VaultItemCreate": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name",
+            "example": "MasterEncryptionKey"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description",
+            "example": "AES-256 primary key"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "description"
+        ],
+        "title": "VaultItemCreate"
+      },
+      "VaultItemResponse": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "owner": {
+            "type": "string",
+            "title": "Owner"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "description",
+          "owner"
+        ],
+        "title": "VaultItemResponse"
+      }
+    }
+  }
+}

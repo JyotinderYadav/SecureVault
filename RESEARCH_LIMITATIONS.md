@@ -45,3 +45,4 @@ Despite these academic boundaries, SecureVault provides concrete, actionable tak
 1. **Shift-Left Candidate Linting:** Stage 2 keyword extraction can be integrated into pre-commit hooks and CI/CD pipelines as a fast, zero-runtime static security linter for OpenAPI pull requests.
 2. **Defensive Hardening Verification:** The dual-mode testbed architecture demonstrates that standard SRE practices (canonical path validation, parameterized SQL statements, strict destination IP checking, and context-aware HTML escaping) neutralize 100% of tested injection vectors with zero false positives.
 3. **Reproducibility Guarantee:** Operating under a ₹0 budget on standard Windows 11 hardware ensures that any student, educator, or independent researcher can reproduce all findings without friction or cloud costs.
+

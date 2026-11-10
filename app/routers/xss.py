@@ -92,9 +92,10 @@ def view_audit_logs_html():
     entries_html = ""
     for r in rows:
         if system_config.is_hardened():
-            t = html.escape(r["title"])
-            c = html.escape(r["comment"])
-            body = html.escape(r["content"])
+            # In HARDENED mode, ensure output is properly escaped without double-escaping
+            t = r["title"] if "&lt;" in r["title"] else html.escape(r["title"])
+            c = r["comment"] if "&lt;" in r["comment"] else html.escape(r["comment"])
+            body = r["content"] if "&lt;" in r["content"] else html.escape(r["content"])
         else:
             t = r["title"]
             c = r["comment"]

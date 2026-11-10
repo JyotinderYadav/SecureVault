@@ -5,6 +5,7 @@ Dual-mode query execution for SQL Injection simulation (CWE-89)
 import sqlite3
 from typing import List, Dict, Any, Optional
 from config.settings import DB_PATH
+from app.core.auth import hash_password
 
 def get_db_connection() -> sqlite3.Connection:
     conn = sqlite3.connect(str(DB_PATH))
@@ -61,8 +62,8 @@ def init_db():
     # Seed initial data if empty
     cursor.execute("SELECT COUNT(*) FROM users;")
     if cursor.fetchone()[0] == 0:
-        cursor.execute("INSERT INTO users (username, password, role) VALUES ('admin', 'adminpass123', 'admin');")
-        cursor.execute("INSERT INTO users (username, password, role) VALUES ('analyst', 'analystpass', 'user');")
+        cursor.execute("INSERT INTO users (username, password, role) VALUES ('admin', ?, 'admin');", (hash_password("adminpass123"),))
+        cursor.execute("INSERT INTO users (username, password, role) VALUES ('analyst', ?, 'user');", (hash_password("analystpass"),))
 
     cursor.execute("SELECT COUNT(*) FROM vault_records;")
     if cursor.fetchone()[0] == 0:

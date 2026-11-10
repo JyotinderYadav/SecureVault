@@ -3,12 +3,12 @@
   "vulnerable_mode": {
     "baseline_random_fuzzing": {
       "total_requests": 48,
-      "execution_time_ms": 411.62,
+      "execution_time_ms": 318.24,
       "findings_count": 0
     },
     "voapi2_targeted_testing": {
       "total_requests": 15,
-      "execution_time_ms": 151.91,
+      "execution_time_ms": 133.4,
       "candidate_interfaces_tested": 13,
       "confirmed_vulnerabilities": 7,
       "potential_vulnerabilities": 2,
@@ -25,12 +25,12 @@
   "hardened_mode": {
     "baseline_random_fuzzing": {
       "total_requests": 48,
-      "execution_time_ms": 251.8,
+      "execution_time_ms": 187.95,
       "findings_count": 0
     },
     "voapi2_targeted_testing": {
       "total_requests": 15,
-      "execution_time_ms": 88.39,
+      "execution_time_ms": 59.58,
       "negative_mitigations": 10,
       "false_positives": 0
     }
